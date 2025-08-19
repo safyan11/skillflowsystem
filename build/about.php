@@ -13,19 +13,7 @@
 </section>
 
 <!-- about us  -->
-<section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10 ">
-    <div class="flex justify-between gap-20 items-center"> 
-    <div class="lg:w-1/2 w-full">
-        <h1 class="text-4xl font-semibold">About Us</h1>
-        <h2 class="text-2xl font-medium pt-2">Learn, Create, and Grow with Us</h2>
-        <p class="2xl:text-lg text-base leading-7 text-[#666666] pt-6">At Learning, we believe in empowering individuals with the skills they need to succeed in the digital world. Whether you want to learn Web Development, explore Creative Designing, or master Digital Marketing, our expert led courses are designed for all levels—beginners to advanced learners.</p>
-    </div>
-    <div class="lg:w-1/2 w-full">
-        <img src="./assets/img/aboutimg.avif" alt="">
-    </div>
-   </div>
-   
-</section>
+
 
 <section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10 ">
     <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
