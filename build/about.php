@@ -27,7 +27,27 @@
    
 </section>
 
+<section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10 ">
+    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10">
+        <div class="text-center bg-white p-6 rounded-lg shadow-md hover:bg-black hover:text-white transition duration-300 group">
+            <i class="fa fa-pencil text-4xl"></i>
+            <h2 class="xl:text-3xl text-2xl pt-2">Achievement</h2>
+            <p class="2xl:text-lg lg:text-base text-sm leading-6 lg:leading-7 2xl:leading-8 text-[#666666] pt-2">We are proud of our achievements in the field of online learning. With over 5000+ satisfied students trained in web development, designing, and digital marketing, our platform has become a trusted name for learners across the globe.</p>
+        </div>
 
+        <div class="text-center bg-white p-6 rounded-lg shadow-md hover:bg-black transition duration-300 group hover:text-white">
+            <i class="fa fa-book text-4xl"></i>
+            <h2 class="xl:text-3xl text-2xl pt-2">Achievement</h2>
+            <p class="2xl:text-lg lg:text-base text-sm leading-6 lg:leading-7 2xl:leading-8 text-[#666666] pt-2">Our vision is to empower individuals worldwide by providing accessible, high-quality digital education. We aim to break barriers of location and background, making advanced tech skills available to everyone.</p>
+        </div>
+
+        <div class="text-center bg-white p-6 rounded-lg shadow-md hover:bg-black transition duration-300 group hover:text-white">
+            <i class="fa fa-globe text-4xl"></i>
+            <h2 class="xl:text-3xl text-2xl pt-2">Achievement</h2>
+            <p class="2xl:text-lg lg:text-base text-sm leading-6 lg:leading-7 2xl:leading-8 text-[#666666] pt-2">Our mission is to deliver practical, skill-based training in the fields of web development, creative designing, and digital marketing. We strive to create a supportive learning environment where students not only gain knowledge but also build careers.</p>
+        </div>
+    </div>
+</section>
 <!-- testimonials  -->
 <section class="xl:py-20 py-10 xl:px-20 lg:px-10 px-5">
   <h2 class="text-4xl font-bold text-center text-black mb-12">Testimonials</h2>
