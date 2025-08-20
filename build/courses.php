@@ -47,6 +47,11 @@
 
 
 
+<section class="h-96 bg-fixed bg-center bg-no-repeat bg-cover" style="background-image: url('./assets/img/about.png');">
+  <div class="h-96 flex items-center justify-center bg-black bg-opacity-80">
+    <h1 class="md:text-4xl text-2xl font-bold text-white">Courses</h1>
+  </div>
+</section>
 
 <section>
     <div>
