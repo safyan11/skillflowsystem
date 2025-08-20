@@ -53,19 +53,7 @@
   </div>
 </section>
 
-<section>
-    <div>
-        <div>
-            <h1 class="">Achievement</h1>
-        </div>
-        <div>
 
-        </div>
-        <div>
-            
-        </div>
-    </div>
-</section>
 
 <!-- footer  -->
  
