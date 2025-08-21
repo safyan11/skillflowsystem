@@ -34,7 +34,65 @@ if (isset($_GET['status'])) {
 ?>
 
 <body class="bg-gray-50 font-sans antialiased">
+  <div class="min-h-screen flex">
+    <?php require_once "inc/sidebar.php"; ?>
+    <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
+      <?php require_once "inc/topbar.php"; ?>
 
+      <div class="flex gap-10 justify-between overflow-y-auto px-6 py-6">
+        <div class="w-full p-6 bg-white rounded-lg shadow">
+          <h1 class="text-2xl font-bold mb-6">Assignments</h1>
+
+          <?= $message ?>
+
+          <div id="assignment-list" class="space-y-6">
+            <?php if ($assignments && $assignments->num_rows > 0): ?>
+              <?php while ($assignment = $assignments->fetch_assoc()): ?>
+                <?php
+                  $sub = $subs_map[$assignment['id']] ?? null;
+                  $submitted = $sub !== null;
+                ?>
+                <div class="flex items-center justify-between border rounded-lg p-4">
+                  <div class="flex items-center space-x-4">
+                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4c4.svg" class="w-8 h-8" />
+                    <div>
+                      <p class="font-semibold"><?= htmlspecialchars($assignment['title']) ?></p>
+                      <div class="flex items-center space-x-2 text-sm text-gray-500">
+                        <span>Uploaded by <?= htmlspecialchars($assignment['teacher_name']) ?></span>
+                        <span>• <?= date('Y-m-d', strtotime($assignment['uploaded_at'])) ?></span>
+                        <span class="<?= $submitted ? 'text-blue-500' : 'text-red-500' ?>">
+                          • <?= $submitted ? 'Submitted' : 'Pending' ?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex space-x-2 items-center">
+                    <a href="../teacher/uploads/assignments/<?= urlencode($assignment['filename']) ?>" 
+                       class="px-4 py-2 border rounded-md text-blue-600 hover:underline" download>Download</a>
+
+                    <?php if ($submitted): ?>
+                      <a href="uploads/submissions/<?= urlencode($sub['filename']) ?>" 
+                         class="px-4 py-2 border rounded-md text-green-600 hover:underline" download>
+                         Your Submission
+                      </a>
+                    <?php else: ?>
+                      <form action="submit_assignment.php" method="POST" enctype="multipart/form-data" class="flex items-center space-x-2">
+                        <input type="hidden" name="assignment_id" value="<?= $assignment['id'] ?>" />
+                        <input type="file" name="submission_file" required
+                          accept=".pdf,.doc,.docx,.zip,.rar,.txt,.jpg,.png"
+                          class="block border border-gray-300 rounded-md p-1" />
+                        <button type="submit" class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">Upload</button>
+                      </form>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+            <?php else: ?>
+              <p class="text-gray-500">No assignments available.</p>
+            <?php endif; ?>
+          </div>
 
 
 <?php
