@@ -1,13 +1,4 @@
-  <script>
-    function toggleDropdown() {
-      document.getElementById('dropdown').classList.toggle('hidden');
-    }
-    function selectCourse(id, title) {
-      document.getElementById('selectedCourseBtn').textContent = title + " ▼";
-      document.getElementById('course_id').value = id;
-      toggleDropdown();
-    }
-  </script>
+
 <?php require_once "inc/header.php"; 
 require_once "../inc/db.php";
 // Redirect if user not logged in
