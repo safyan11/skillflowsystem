@@ -146,6 +146,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
  <!-- Script for dropdown -->
-  
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById('dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    window.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('dropdown');
+      if (!e.target.matches('button')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  </script>
+
 </body>
 </html>
