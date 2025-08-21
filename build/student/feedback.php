@@ -66,57 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-<h1 class="text-3xl font-bold mb-6">Your Feedback</h1>
-
-  <?php if ($feedbackSaved): ?>
-    <p class="text-green-600 mb-4">Thank you! Your feedback has been saved.</p>
-  <?php elseif ($error): ?>
-    <p class="text-red-600 mb-4"><?= htmlspecialchars($error) ?></p>
-  <?php endif; ?>
-
-  <form method="POST" action="">
-    <!-- Select Course -->
-    <div class="flex gap-4 mb-6">
-      <div class="relative inline-block">
-        <button type="button" id="selectedCourseBtn" onclick="toggleDropdown()" class="bg-gray-200 px-4 py-2 rounded-md shadow text-sm font-medium focus:outline-none">
-          Select Course ▼
-        </button>
-        <ul id="dropdown" class="absolute mt-2 w-48 bg-white border rounded shadow-lg hidden z-10 max-h-48 overflow-auto">
-          <?php foreach ($courses as $course): ?>
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="selectCourse(<?= $course['id'] ?>, '<?= addslashes($course['title']) ?>')">
-              <?= htmlspecialchars($course['title']) ?>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-      <button type="button" class="text-gray-400 font-semibold" onclick="alert('Please select a course first')">Review Feedback</button>
-    </div>
-
-    <input type="hidden" name="course_id" id="course_id" value="">
-
-    <!-- Rating -->
-    <label class="block mb-2 font-semibold">Your Rating (1 to 5 stars):</label>
-    <select name="rating" required class="mb-4 px-3 py-2 border rounded">
-      <option value="">Select rating</option>
-      <option value="5">★★★★★ (5 stars)</option>
-      <option value="4">★★★★☆ (4 stars)</option>
-      <option value="3">★★★☆☆ (3 stars)</option>
-      <option value="2">★★☆☆☆ (2 stars)</option>
-      <option value="1">★☆☆☆☆ (1 star)</option>
-    </select>
-
-    <!-- Comments -->
-    <label class="block mb-2 font-semibold">Your Feedback:</label>
-    <textarea name="comments" rows="5" required class="w-full px-3 py-2 border rounded mb-4" placeholder="Write your feedback here..."></textarea>
-
-    <button type="submit" class="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-900">Upload feedback</button>
-  </form>
-
- 
-
-  </div>
-    </div>
-  </div>
 
   <!-- sidebar menu  -->
   <script>
