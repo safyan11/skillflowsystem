@@ -73,7 +73,7 @@
   <div class="flex md:justify-between justify-center items-center md:flex-row flex-col">
     <div class="flex flex-col justify-center">
       <img src="./assets/img/" alt="">
-      <h1 class="text-2xl font-bold text-white">Learning Hub</h1>
+      <h1 class="text-2xl font-bold text-white">Skill Flow</h1>
     </div>
     <div class="pt-5 md:pt-0">
        <h1 class="md:text-2xl text-xl font-bold text-white">Quick Links</h1>
@@ -88,7 +88,7 @@
     <div class="space-y-4 flex flex-col justify-center items-center pt-5 md:pt-0">
       <h1 class="md:text-2xl text-xl font-bold text-white">Contact Info</h1>
       <p class="text-white text-base "><i class="fa-solid fa-location-dot"></i>&nbsp; Lahore, Pakistan</p>
-      <p class="text-white text-base "><i class="fa-solid fa-envelope"></i>&nbsp; learninghub@gmail.com</p>
+      <p class="text-white text-base "><i class="fa-solid fa-envelope"></i>&nbsp; skillflow@gmail.com</p>
       <p class="text-white text-base "><i class="fa-solid fa-phone"></i>&nbsp; 0562929978</p>
     </div>
   </div>

@@ -1,18 +1,40 @@
 <?php 
 require_once "inc/header.php"; 
 require_once "../inc/db.php"; 
-// ✅ Handle delete request
+
+
 if (isset($_POST['delete_user']) && isset($_POST['user_id'])) {
     $userId = intval($_POST['user_id']);
-    $sql = "DELETE FROM users WHERE id = $userId";
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('User deleted successfully'); window.location.href='deleteuser.php';</script>";
-    } else {
-        echo "<script>alert('Error deleting user: " . $conn->error . "');</script>";
+
+    try {
+       
+        $conn->begin_transaction();
+
+        
+        $stmt = $conn->prepare("DELETE FROM feedback WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->close();
+
+     
+        $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->close();
+
+        
+        $conn->commit();
+
+        echo "<script>alert('✅ User deleted successfully'); window.location.href='deleteuser.php';</script>";
+
+    } catch (Exception $e) {
+       
+        $conn->rollback();
+        echo "<script>alert('❌ Error deleting user: " . $e->getMessage() . "');</script>";
     }
 }
 
-// ✅ Fetch all users
+
 $result = $conn->query("SELECT * FROM users");
 
 ?>
@@ -63,8 +85,7 @@ $result = $conn->query("SELECT * FROM users");
     </tbody>
 </table>
 
-
-      <!-- Pagination -->
+      <!-- Pagination (dummy for now) -->
       <div class="flex items-center justify-between mt-4 px-2 text-sm text-gray-600">
         <button class="hover:text-black">&larr;</button>
         <span>Page 1 of 10</span>
@@ -72,14 +93,8 @@ $result = $conn->query("SELECT * FROM users");
       </div>
     </div>
   </div>
-
-
     </div>
   </div>
-
-  
-
-
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>
 </html>

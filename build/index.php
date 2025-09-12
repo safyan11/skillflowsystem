@@ -22,7 +22,7 @@
     <p class="xl:text-lg text-base pt-4 text-[#666666]">Boost up your skills with a new way of learning .Best educational plateform that is providing best services to you anywhere anytime.we aim to empower students to change the world with unlock his skills.</p>
 
     <div class="pt-10">
-      <a href="./signup.html">
+      <a href="./signup.php">
       <button class="bg-black py-2 px-6 text-white hover:bg-white hover:text-black border border-black">Sign Up</button>
       </a>
     </div>
