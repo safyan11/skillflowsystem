@@ -10,7 +10,7 @@
 
 <section class="h-96 bg-fixed bg-center bg-no-repeat bg-cover" style="background-image: url('./assets/img/banner\ img.webp');">
   <div class="h-96 flex items-center justify-center bg-black bg-opacity-80">
-    <h1 class="md:text-4xl text-2xl font-bold text-white">Skill Flow</h1>
+    <h1 class="md:text-4xl text-2xl font-bold text-white">TeachMate With Learning</h1>
   </div>
 </section>
 <!-- hero section  -->
@@ -70,7 +70,7 @@
       <p class="2xl:text-base text-sm pt-4 2xl:leading-10 leading-7 text-[#666666]">
         Education underpins all social progress. Our aim is to harness technology to make all education and skills training available to anyone, anywhere for free.We believe that free education, more than anything, has the power to break through boundaries and transform lives. <br>
 
-Education underpins all social progress. Our aim is to harness technology to make all education and skills training available to anyone, anywhere for free.We believe that free education, more than anything, has the power to break through boundaries and transform lives.
+        Education underpins all social progress. Our aim is to harness technology to make all education and skills training available to anyone, anywhere for free.We believe that free education, more than anything, has the power to break through boundaries and transform lives.
       </p>
 
         <div class="pt-10">

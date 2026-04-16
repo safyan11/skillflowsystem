@@ -1,21 +1,19 @@
 <?php
 require_once "inc/header.php";
-
-
-// Assume student logged in
-$student_id = $_SESSION['user_id'] ?? 2;
-
 require_once "../inc/db.php";
 
+$student_id = $_SESSION['user_id'] ?? 1;
+
+// Fetch active assignments
 $sql = "SELECT a.*, u.name AS teacher_name 
         FROM assignments a 
         JOIN users u ON a.uploaded_by = u.id
         ORDER BY a.uploaded_at DESC";
-$assignments = $conn->query($sql);
+$assignments_result = $conn->query($sql);
 
-$sql_subs = "SELECT * FROM assignment_submissions WHERE student_id = $student_id";
+// Map student submissions
+$sql_subs = "SELECT * FROM submissions WHERE student_id = $student_id";
 $student_submissions = $conn->query($sql_subs);
-
 $subs_map = [];
 if ($student_submissions && $student_submissions->num_rows > 0) {
     while ($row = $student_submissions->fetch_assoc()) {
@@ -23,135 +21,120 @@ if ($student_submissions && $student_submissions->num_rows > 0) {
     }
 }
 
-$message = '';
+// Fetch Grades
+$sql_grades = "SELECT g.*, a.title AS assignment_title 
+               FROM grading g
+               JOIN assignments a ON g.assignment_id = a.id
+               WHERE g.student_id = $student_id
+               ORDER BY g.graded_at DESC";
+$grades_result = $conn->query($sql_grades);
+
+$status_msg = '';
 if (isset($_GET['status'])) {
     if ($_GET['status'] === 'success') {
-        $message = '<p class="text-green-600 mb-4">Assignment submitted successfully!</p>';
+        $status_msg = "Assignment submitted successfully!";
     } elseif ($_GET['status'] === 'error') {
-        $message = '<p class="text-red-600 mb-4">There was an error submitting your assignment. Please try again.</p>';
+        $status_msg = "Error submitting assignment. Please try again.";
     }
 }
 ?>
 
-<body class="bg-gray-50 font-sans antialiased">
-  <div class="min-h-screen flex">
-    <?php require_once "inc/sidebar.php"; ?>
-    <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
-    <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
-      <?php require_once "inc/topbar.php"; ?>
-
-      <div class="flex gap-10 justify-between overflow-y-auto px-6 py-6">
-        <div class="w-full p-6 bg-white rounded-lg shadow">
-          <h1 class="text-2xl font-bold mb-6">Assignments</h1>
-
-          <?= $message ?>
-
-          <div id="assignment-list" class="space-y-6">
-            <?php if ($assignments && $assignments->num_rows > 0): ?>
-              <?php while ($assignment = $assignments->fetch_assoc()): ?>
-                <?php
-                  $sub = $subs_map[$assignment['id']] ?? null;
-                  $submitted = $sub !== null;
-                ?>
-                <div class="flex items-center justify-between border rounded-lg p-4">
-                  <div class="flex items-center space-x-4">
-                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4c4.svg" class="w-8 h-8" />
-                    <div>
-                      <p class="font-semibold"><?= htmlspecialchars($assignment['title']) ?></p>
-                      <div class="flex items-center space-x-2 text-sm text-gray-500">
-                        <span>Uploaded by <?= htmlspecialchars($assignment['teacher_name']) ?></span>
-                        <span>• <?= date('Y-m-d', strtotime($assignment['uploaded_at'])) ?></span>
-                        <span class="<?= $submitted ? 'text-blue-500' : 'text-red-500' ?>">
-                          • <?= $submitted ? 'Submitted' : 'Pending' ?>
-                        </span>
-                      </div>
+<body class="bg-slate-50 relative before:fixed before:inset-0 before:-z-10 before:w-full before:h-full before:bg-\[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))\] before:from-blue-100 before:via-white before:to-emerald-50">
+    <div class="flex">
+        <?php require_once "inc/sidebar.php"; ?>
+        <div class="flex-1">
+            <?php require_once "inc/topbar.php"; ?>
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-3xl font-bold">Assignments</h1>
+                    <div class="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-100 text-sm font-semibold">
+                        Available: <?= $assignments_result->num_rows ?>
                     </div>
-                  </div>
-
-                  <div class="flex space-x-2 items-center">
-                    <a href="../teacher/uploads/assignments/<?= urlencode($assignment['filename']) ?>" 
-                       class="px-4 py-2 border rounded-md text-blue-600 hover:underline" download>Download</a>
-
-                    <?php if ($submitted): ?>
-                      <a href="uploads/submissions/<?= urlencode($sub['filename']) ?>" 
-                         class="px-4 py-2 border rounded-md text-green-600 hover:underline" download>
-                         Your Submission
-                      </a>
-                    <?php else: ?>
-                      <form action="submit_assignment.php" method="POST" enctype="multipart/form-data" class="flex items-center space-x-2">
-                        <input type="hidden" name="assignment_id" value="<?= $assignment['id'] ?>" />
-                        <input type="file" name="submission_file" required
-                          accept=".pdf,.doc,.docx,.zip,.rar,.txt,.jpg,.png"
-                          class="block border border-gray-300 rounded-md p-1" />
-                        <button type="submit" class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">Upload</button>
-                      </form>
-                    <?php endif; ?>
-                  </div>
                 </div>
-              <?php endwhile; ?>
-            <?php else: ?>
-              <p class="text-gray-500">No assignments available.</p>
-            <?php endif; ?>
-          </div>
 
+                <?php if ($status_msg): ?>
+                    <div class="p-4 rounded-lg mb-8 font-bold border <?= strpos($status_msg, 'successfully') !== false ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200' ?>">
+                        <?= $status_msg ?>
+                    </div>
+                <?php endif; ?>
 
-<?php
-// Fetch student's grading records with assignment titles
-$sql_grades = "SELECT g.*, a.title AS assignment_title 
-               FROM grading g
-               JOIN assignments a ON g.assignment_id = a.id
-               WHERE g.student_id = ?
-               ORDER BY g.graded_at DESC";
-$stmt_grades = $conn->prepare($sql_grades);
-$stmt_grades->bind_param('i', $student_id);
-$stmt_grades->execute();
-$result_grades = $stmt_grades->get_result();
-?>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <?php if ($assignments_result && $assignments_result->num_rows > 0): ?>
+                        <?php while ($assignment = $assignments_result->fetch_assoc()): ?>
+                            <?php
+                                $sub = $subs_map[$assignment['id']] ?? null;
+                                $submitted = $sub !== null;
+                            ?>
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                                        <i class="fa-solid fa-file-alt text-xl"></i>
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold <?= $submitted ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' ?>">
+                                        <?= $submitted ? 'Submitted' : 'Pending' ?>
+                                    </span>
+                                </div>
+                                <h3 class="text-xl font-bold mb-1"><?= htmlspecialchars($assignment['title']) ?></h3>
+                                <p class="text-gray-500 text-xs mb-6"><?= htmlspecialchars($assignment['teacher_name']) ?> | <?= date('M d, Y', strtotime($assignment['uploaded_at'])) ?></p>
+                                
+                                <div class="flex items-center gap-4 pt-4 border-t border-gray-50">
+                                    <a href="../uploads/assignments/<?= $assignment['filename'] ?>" download class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
+                                        <i class="fa-solid fa-download"></i> Download Task
+                                    </a>
+                                    <?php if ($submitted): ?>
+                                        <span class="text-xs font-bold text-green-600 flex items-center gap-1">
+                                            <i class="fa-solid fa-check"></i> Already Uploaded
+                                        </span>
+                                    <?php else: ?>
+                                        <form action="submit_assignment.php" method="POST" enctype="multipart/form-data" class="flex-1 flex gap-2">
+                                            <input type="hidden" name="assignment_id" value="<?= $assignment['id'] ?>">
+                                            <input type="file" name="submission_file" required class="text-[10px] flex-1">
+                                            <button type="submit" class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-800 transition">Upload</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php endif; ?>
+                </div>
 
-<div class="mt-12 bg-white p-6 rounded-lg shadow w-full">
-  <h2 class="text-2xl font-bold mb-6">Your Assignment Results</h2>
-  
-  <?php if ($result_grades && $result_grades->num_rows > 0): ?>
-    <div class="overflow-x-auto rounded-xl shadow">
-      <table class="min-w-full text-left border-collapse">
-        <thead class="bg-gray-100 text-sm font-semibold text-gray-700">
-          <tr>
-            <th class="p-4 border">Assignment</th>
-            <th class="p-4 border">Total Marks</th>
-            <th class="p-4 border">Obtained Marks</th>
-            <th class="p-4 border">Percentage</th>
-            <th class="p-4 border">Grade</th>
-            <th class="p-4 border">Status</th>
-            <th class="p-4 border">Graded At</th>
-          </tr>
-        </thead>
-        <tbody class="text-sm text-gray-800">
-          <?php while ($grade = $result_grades->fetch_assoc()): ?>
-            <tr class="border-b">
-              <td class="p-4 border"><?= htmlspecialchars($grade['assignment_title']) ?></td>
-              <td class="p-4 border"><?= $grade['total_marks'] ?></td>
-              <td class="p-4 border"><?= $grade['obtained_marks'] ?></td>
-              <td class="p-4 border"><?= number_format($grade['percentage'], 2) ?>%</td>
-              <td class="p-4 border"><?= htmlspecialchars($grade['grade']) ?></td>
-              <td class="p-4 border <?= strtolower($grade['status']) === 'passed' ? 'text-green-600' : 'text-red-600' ?> font-medium"><?= htmlspecialchars($grade['status']) ?></td>
-              <td class="p-4 border"><?= $grade['graded_at'] ? date('Y-m-d', strtotime($grade['graded_at'])) : '-' ?></td>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
-    </div>
-  <?php else: ?>
-    <p class="text-gray-500">No grading results available yet.</p>
-  <?php endif; ?>
-</div>
-
-<?php
-$stmt_grades->close();
-?>
-
+                <h2 class="text-2xl font-bold mb-6">Grades & Feedback</h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Assignment</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Marks</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Grade</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <?php if ($grades_result && $grades_result->num_rows > 0): ?>
+                                <?php while ($grade = $grades_result->fetch_assoc()): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 font-bold"><?= htmlspecialchars($grade['assignment_title']) ?></td>
+                                        <td class="px-6 py-4"><?= $grade['obtained_marks'] ?> / <?= $grade['total_marks'] ?></td>
+                                        <td class="px-6 py-4 font-bold text-blue-600"><?= $grade['grade'] ?></td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase <?= strtolower($grade['status']) == 'passed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+                                                <?= $grade['status'] ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-xs text-gray-500"><?= date('M d, Y', strtotime($grade['graded_at'])) ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                                <tr><td colspan="5" class="px-6 py-10 text-center text-gray-400 italic">No grades found.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>
 </html>
+

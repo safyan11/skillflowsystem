@@ -20,7 +20,7 @@
         <div class="space-y-4 lg:w-1/2 w-full">
             <h1 class="text-4xl font-semibold">Contact</h1> 
             <p class="text-black text-lg "><i class="fa-solid fa-location-dot"></i>&nbsp; Lahore, Pakistan</p>
-            <p class="text-black text-lg "><i class="fa-solid fa-envelope"></i>&nbsp; skillflow@gmail.com</p>
+            <p class="text-black text-lg "><i class="fa-solid fa-envelope"></i>&nbsp; TeachMate@gmail.com</p>
             <p class="text-black text-lg "><i class="fa-solid fa-phone"></i>&nbsp; 0562929978</p>
             <p class="text-black text-lg "><i class="fa-solid fa-clock"></i>&nbsp; Mon - Fri 8:00 AM to 5:00 PM</p>
         </div>

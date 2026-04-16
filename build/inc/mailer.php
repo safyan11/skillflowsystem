@@ -19,7 +19,7 @@ function sendEmail($to, $subject, $body) {
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom('your_email@gmail.com', 'Skill Flow System');
+        $mail->setFrom('your_email@gmail.com', 'TeachMate System');
         $mail->addAddress($to);
 
         // Content

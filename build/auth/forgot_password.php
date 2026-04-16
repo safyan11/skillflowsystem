@@ -54,16 +54,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail_sent = false;
             }
             
-            // For testing, show the OTP even if email fails
+            // Redirect to OTP verification page regardless of mail success for Localhost testing.
+            // On localhost without sendmail configured, this ensures the developer can still proceed.
+            $redirect_url = "Location: verify_otp.php?email=" . urlencode($email);
             if (!$mail_sent) {
-                $error .= "<br><strong>For testing purposes, your OTP is: $otp</strong>";
+                // Pass OTP purely for local testing if mail fails
+                $redirect_url .= "&local_otp=" . $otp;
             }
             
-            // Redirect to OTP verification page only if email was sent
-            if ($mail_sent) {
-                header("Location: verify_otp.php?email=" . urlencode($email));
-                exit();
-            }
+            header($redirect_url);
+            exit();
         } else {
             $error = "Email address not found";
         }
@@ -86,44 +86,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-   <section>
+   <section class="bg-slate-50 relative before:fixed before:inset-0 before:-z-10 before:w-full before:h-full before:bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] before:from-blue-100 before:via-white before:to-emerald-50">
      <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white dark:border-black border md:rounded-3xl 2xl:px-32 md:px-1 shadow-md overflow-hidden">
+        <div class="w-full max-w-md bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl overflow-hidden">
             <!-- Card Header -->
-            <div class="py-4 shadow-sm border ">
-                <h4 class="text-xl font-bold text-black text-center">Forgot Password</h4>
+            <div class="py-6 border-b border-gray-100 bg-white/40">
+                <h4 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500 text-center">Password Recovery</h4>
             </div>
             
             <!-- Card Body -->
-            <div class="p-6">
+            <div class="p-8">
                 <?php if($error): ?>
-                    <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                    <div class="p-4 mb-5 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl">
                         <?php echo $error; ?>
                     </div>
                 <?php endif; ?>
                 
                 <?php if($success): ?>
-                    <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+                    <div class="p-4 mb-5 text-sm text-green-700 bg-emerald-50 border border-emerald-100 rounded-xl">
                         <?php echo $success; ?>
                     </div>
                 <?php endif; ?>
                 
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Registered Email Address</label>
                         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required
-                               class="w-full px-3 py-2 border border-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
-                        <small class="text-gray-500 text-xs mt-1 block">We'll send an OTP to this email</small>
+                               class="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400" placeholder="your@email.com">
+                        <small class="text-gray-500 text-xs mt-2 block font-medium">We'll dispatch a 6-digit verification code to this address.</small>
                     </div>
-                    <div class="mb-4">
-                        <button type="submit" class="text-base font-semibold 2xl:py-3 md:py-1 py-1 bg-white hover:bg-black text-black w-full hover:text-white border rounded-lg mt-5">
-                            Send OTP
+                    <div class="mt-8">
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 text-white font-bold text-lg hover:shadow-lg hover:scale-[1.02] transition-all flex justify-center items-center gap-2">
+                            <span>Send Recovery Code</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg>
                         </button>
                     </div>
                 </form>
                 
-                <div class="text-center mt-4">
-                    <a href="../login.php" class="text-gray-500 hover:text-black text-sm font-medium">Back to Login</a>
+                <div class="text-center mt-6">
+                    <a href="../login.php" class="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all"><span class="mr-1">&larr;</span> Return to securely login</a>
                 </div>
             </div>
         </div>

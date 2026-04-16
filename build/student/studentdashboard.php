@@ -1,87 +1,112 @@
+<?php
+require_once "inc/header.php";
+require_once "../inc/db.php";
 
-<?php require_once "inc/header.php"; ?>
-<body class="bg-gray-50 font-sans antialiased">
-  <div class="min-h-screen flex">
-   <?php require_once "inc/sidebar.php"; ?>
+$student_id = $_SESSION['user_id'] ?? 1;
 
-    <!-- Overlay for mobile when sidebar open -->
-    <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
+// Metrics
+$res = $conn->query("SELECT COUNT(*) as c FROM course_enrollments WHERE student_id = $student_id");
+$enrolled_count = $res ? $res->fetch_assoc()['c'] : 0;
 
-    <!-- Main content area -->
-    <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
-      <!-- top bar -->
-        <?php require_once "inc/topbar.php"; ?>
+$res = $conn->query("
+    SELECT COUNT(*) as c 
+    FROM assignments a 
+    JOIN course_enrollments ce ON a.course_id = ce.course_id 
+    WHERE ce.student_id = $student_id 
+    AND NOT EXISTS (SELECT 1 FROM submissions s WHERE s.assignment_id = a.id AND s.student_id = $student_id)
+");
+$pending_tasks = $res ? $res->fetch_assoc()['c'] : 0;
 
-      <!-- scrollable content -->
-      <div class="flex-1 overflow-y-auto">
-        <!-- hero/banner -->
-        <section class="px-4 py-6">
-          <h1 class="text-4xl pb-10 font-bold">Student Dashboard</h1>
-          <div class="rounded-xl bg-neutral-900 text-white p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div class="flex-1">
-              <div class="text-sm uppercase tracking-wide mb-1">Online Course</div>
-              <h2 class="text-3xl font-bold leading-tight">Every expert was once a beginner — start your journey now.</h2>
-            </div>
-            <div class="mt-4 md:mt-0">
-              <button class="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium shadow">
-                Join Now
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </section>
+$res = $conn->query("SELECT COUNT(DISTINCT quiz_id) as c FROM quiz_attempts WHERE student_id = $student_id");
+$quizzes_taken = $res ? $res->fetch_assoc()['c'] : 0;
 
-        <!-- cards grid -->
-        <main class="px-4 pb-8">
-        <?php
-include '../inc/db.php'; // Your database connection
+$res = $conn->query("SELECT COUNT(*) as c FROM certificates WHERE student_id = $student_id");
+$certificates_earned = $res ? $res->fetch_assoc()['c'] : 0;
 
-$sql = "SELECT * FROM courses ORDER BY id DESC";
-$result = $conn->query($sql);
+// Courses
+$search = isset($_GET['search']) ? $conn->real_escape_string(trim($_GET['search'])) : '';
+$sql = "SELECT * FROM courses";
+if (!empty($search)) {
+    $sql .= " WHERE title LIKE '%$search%' OR short_description LIKE '%$search%'";
+}
+$sql .= " ORDER BY id DESC";
+$courses_result = $conn->query($sql);
+?>
 
-echo '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">';
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
- echo '
-<a href="playlist.php?id=' . $row['id'] . '" class="block">
-    <div class="card bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition">
-        <!-- Thumbnail -->
-        <div class="h-40 bg-cover bg-center" style="background-image: url(\'../admin/' . htmlspecialchars($row['thumbnail']) . '\');"></div>
-        
-        <!-- Content -->
-        <div class="p-4">
-            <h3 class="font-semibold text-lg mb-1">' . htmlspecialchars($row['title']) . '</h3>
-            <p class="text-sm text-gray-600 mb-3">' . htmlspecialchars($row['short_description']) . '</p>
-            
-            <ul class="text-xs text-gray-500 space-y-1">
-                <li><strong>Video Hours:</strong> ' . htmlspecialchars($row['video_hours']) . '</li>
-                <li><strong>Articles:</strong> ' . htmlspecialchars($row['articles']) . '</li>
-                <li><strong>Resources:</strong> ' . htmlspecialchars($row['resources']) . '</li>
-                <li><strong>Assignments:</strong> ' . htmlspecialchars($row['assignments']) . '</li>
-                <li><strong>Certificate:</strong> ' . htmlspecialchars($row['certificate']) . '</li>
-            </ul>
+<body class="bg-slate-50 relative before:fixed before:inset-0 before:-z-10 before:w-full before:h-full before:bg-\[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))\] before:from-blue-100 before:via-white before:to-emerald-50">
+    <div class="flex">
+        <?php require_once "inc/sidebar.php"; ?>
+        <div class="flex-1">
+            <?php require_once "inc/topbar.php"; ?>
+            <div class="p-8">
+                <!-- Hero Section -->
+                <div class="bg-black text-white p-10 rounded-3xl mb-12 shadow-sm">
+                    <h1 class="text-4xl font-bold mb-4">Master New Skills Anytime, Anywhere</h1>
+                    <p class="text-gray-400 text-lg">Learn from the best instructors and boost your career with practical knowledge.</p>
+                </div>
 
-            <div class="mt-4">
-                <p class="text-xs text-gray-500"><strong>Instructor:</strong> ' . htmlspecialchars($row['instructor_name']) . ' (' . htmlspecialchars($row['instructor_designation']) . ')</p>
+                <!-- Stats Tiles -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="glass-card stat-card p-8 rounded-[1.5rem] border border-blue-100">
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Enrolled Courses</p>
+                        <h3 class="text-3xl font-bold text-black"><?= $enrolled_count ?></h3>
+                    </div>
+                    <div class="glass-card stat-card p-8 rounded-[1.5rem] border border-blue-100">
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Assignments Pending</p>
+                        <h3 class="text-3xl font-bold text-black"><?= $pending_tasks ?></h3>
+                    </div>
+                    <div class="glass-card stat-card p-8 rounded-[1.5rem] border border-blue-100">
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Quizzes Taken</p>
+                        <h3 class="text-3xl font-bold text-black"><?= $quizzes_taken ?></h3>
+                    </div>
+                    <div class="glass-card stat-card p-8 rounded-[1.5rem] border border-blue-100">
+                        <p class="text-sm text-gray-500 font-semibold mb-1">Certificates</p>
+                        <h3 class="text-3xl font-bold text-black"><?= $certificates_earned ?></h3>
+                    </div>
+                </div>
+
+                <!-- Course Grid -->
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold">Recommended Courses</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <?php if ($courses_result && $courses_result->num_rows > 0): ?>
+                        <?php while ($row = $courses_result->fetch_assoc()): ?>
+                            <a href="playlist.php?id=<?= $row['id'] ?>" class="group">
+                                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition duration-300">
+                                    <div class="h-44 relative overflow-hidden">
+                                        <img src="../admin/<?= $row['thumbnail'] ?>" class="w-full h-full object-cover">
+                                        <div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-lg text-xs font-bold text-black">
+                                            <?= $row['video_hours'] ?> hrs
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <h4 class="font-bold text-lg mb-2 text-black line-clamp-1"><?= htmlspecialchars($row['title']) ?></h4>
+                                        <p class="text-gray-500 text-xs mb-6 line-clamp-2"><?= htmlspecialchars($row['short_description']) ?></p>
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                                                    <i class="fa-solid fa-user-tie text-xs"></i>
+                                                </div>
+                                                <p class="text-[11px] font-bold text-gray-700"><?= htmlspecialchars($row['instructor_name']) ?></p>
+                                            </div>
+                                            <span class="text-xs font-bold text-blue-600 hover:underline">View Course</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <div class="col-span-full py-20 text-center">
+                            <p class="text-gray-400 italic font-medium">No courses available matching your search.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-</a>';
-    }
-} else {
-    echo '<p class="col-span-4 text-center text-gray-500">No courses found.</p>';
-}
-echo '</div>';
-
-$conn->close();
-?>
-
-        </main>
-      </div>
-    </div>
-  </div>
-
+    <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>
 </html>
+

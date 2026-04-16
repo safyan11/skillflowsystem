@@ -1,214 +1,236 @@
 <?php
-// Include DB connection
-require '../inc/db.php';
+require_once "../inc/db.php";
+require_once "inc/header.php";
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+$message = '';
+$error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Collect form data
-    $title = trim($_POST['title']);
-    $short_description = trim($_POST['short_description']);
-    $video_hours = trim($_POST['video_hours']);
+// Handle Deletion
+if (isset($_GET['delete_id'])) {
+    $del_id = intval($_GET['delete_id']);
+    // Fetch thumbnail to delete file
+    $res = $conn->query("SELECT thumbnail FROM courses WHERE id=$del_id");
+    if($row = $res->fetch_assoc()) {
+        if(!empty($row['thumbnail']) && file_exists(__DIR__ . '/' . $row['thumbnail'])) {
+            unlink(__DIR__ . '/' . $row['thumbnail']);
+        }
+    }
+    if ($conn->query("DELETE FROM courses WHERE id=$del_id")) {
+        $message = "Course purged from system.";
+    } else {
+        $error = "Purge failed: " . $conn->error;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_course'])) {
+    $title = $conn->real_escape_string($_POST['title']);
+    $category_id = intval($_POST['category_id']);
+    $short_description = $conn->real_escape_string($_POST['short_description']);
+    $video_hours = $conn->real_escape_string($_POST['video_hours']);
     $articles = intval($_POST['articles']);
     $resources = intval($_POST['resources']);
     $assignments = intval($_POST['assignments']);
-    $certificate = $_POST['certificate'] === 'Yes' ? 'Yes' : 'No';
-    $full_description = trim($_POST['full_description']);
-    $instructor_name = trim($_POST['instructor_name']);
-    $instructor_designation = trim($_POST['instructor_designation']);
-    $overview = trim($_POST['overview']);
-    $what_you_will_learn = trim($_POST['what_you_will_learn']);
+    $certificate = $_POST['certificate'];
+    $full_description = $conn->real_escape_string($_POST['full_description']);
+    $instructor_name = $conn->real_escape_string($_POST['instructor_name']);
+    $instructor_designation = $conn->real_escape_string($_POST['instructor_designation']);
+    $overview = $conn->real_escape_string($_POST['overview']);
+    $what_you_will_learn = $conn->real_escape_string($_POST['what_you_will_learn']);
 
-    // Handle thumbnail upload
-    $thumbnail_path = '';
-    if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/uploads/courses/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-        
-        $file_name = time() . '_' . basename($_FILES['thumbnail']['name']);
-        $target_path = $upload_dir . $file_name;
-
-        if (move_uploaded_file($_FILES['thumbnail']['tmp_name'], $target_path)) {
-            $thumbnail_path = 'uploads/courses/' . $file_name;
-        } else {
-            die("Error uploading file.");
+    // Handle thumbnail
+    $thumb_url = '';
+    if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
+        $dir = 'uploads/courses/';
+        if (!is_dir($dir)) mkdir($dir, 0777, true);
+        $fname = time() . '_' . preg_replace("/[^a-zA-Z0-9.]/", "_", $_FILES['thumbnail']['name']);
+        if (move_uploaded_file($_FILES['thumbnail']['tmp_name'], $dir . $fname)) {
+            $thumb_url = $dir . $fname;
         }
     }
 
-    // Insert into database
-    $stmt = $conn->prepare("INSERT INTO courses 
-        (title, short_description, video_hours, articles, resources, assignments, certificate, full_description, instructor_name, instructor_designation, overview, what_you_will_learn, thumbnail)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param(
-        "sssiiisssssss",
-        $title,
-        $short_description,
-        $video_hours,
-        $articles,
-        $resources,
-        $assignments,
-        $certificate,
-        $full_description,
-        $instructor_name,
-        $instructor_designation,
-        $overview,
-        $what_you_will_learn,
-        $thumbnail_path
-    );
-
+    $sql = "INSERT INTO courses (title, short_description, video_hours, articles, resources, assignments, certificate, full_description, instructor_name, instructor_designation, overview, what_you_will_learn, thumbnail, category_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssiiisssssssi", $title, $short_description, $video_hours, $articles, $resources, $assignments, $certificate, $full_description, $instructor_name, $instructor_designation, $overview, $what_you_will_learn, $thumb_url, $category_id);
+    
     if ($stmt->execute()) {
-        echo "<script>alert('Course added successfully!'); window.location.href='addcourse.php';</script>";
+        $message = "Course '$title' successfully listed on platform.";
     } else {
-        echo "Error: " . $stmt->error;
+        $error = "Enrollment failed: " . $stmt->error;
     }
-
     $stmt->close();
 }
-$courses = $conn->query("SELECT * FROM courses ORDER BY created_at DESC");
+
+$courses = $conn->query("SELECT c.*, cat.name as cat_name FROM courses c LEFT JOIN categories cat ON c.category_id = cat.id ORDER BY c.created_at DESC");
+$categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
 ?>
 
+<body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
+  <div class="min-h-screen flex">
+    <?php require_once "inc/sidebar.php"; ?>
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
+      <?php require_once "inc/topbar.php"; ?>
 
-<?php require_once "inc/header.php"; ?>
-<body class="bg-gray-50">
-
-
-  <?php require_once "inc/sidebar.php"; ?>
-
-  <!-- Dashboard Header -->
-  <!-- <header class="bg-white shadow p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">Admin Dashboard</h1>
-    <a href="logout.php" class="text-black font-bold text-lg hover:underline">Logout</a>
-  </header> -->
-
-  <!-- Main Container -->
-  <main class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden bg-white rounded-lg shadow p-6">
-    <?php require_once "inc/topbar.php"; ?>
-    <h2 class="text-2xl font-bold mb-6 mt-10">Add New Course</h2>
-    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-4">
-
-      <!-- Course Title -->
-      <div>
-        <label class="block font-semibold mb-1">Course Title</label>
-        <input type="text" name="title" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
-      </div>
-
-      <!-- Short Description -->
-      <div>
-        <label class="block font-semibold mb-1">Short Description</label>
-        <textarea name="short_description" rows="2" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"></textarea>
-      </div>
-
-      <!-- Course Includes -->
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block font-semibold mb-1">Hours of Videos</label>
-          <input type="text" name="video_hours" required class="w-full border rounded px-3 py-2">
+      <main class="p-6 lg:p-10">
+        <div class="mb-10">
+            <h1 class="text-3xl font-black tracking-tight">Curriculum Management</h1>
+            <p class="text-slate-500 font-medium">Design and deploy high-impact learning experiences.</p>
         </div>
-        <div>
-          <label class="block font-semibold mb-1">Number of Articles</label>
-          <input type="number" name="articles" required class="w-full border rounded px-3 py-2">
+
+        <?php if ($message): ?>
+            <div class="bg-emerald-50 text-emerald-700 p-4 rounded-2xl mb-8 font-bold border border-emerald-100 flex items-center gap-3">
+                <i class="fa-solid fa-circle-check"></i> <?= $message ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Creation Form -->
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 lg:p-12 mb-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Draft New Course</h2>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Col -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Category Authority</label>
+                            <select name="category_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                                <option value="">Identify Department...</option>
+                                <?php while($cat = $categories->fetch_assoc()): ?>
+                                    <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Academic Title</label>
+                            <input type="text" name="title" required placeholder="e.g. Advanced Neural Architectures" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Executive Summary</label>
+                            <textarea name="short_description" rows="3" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Runtime (Hrs)</label>
+                                <input type="text" name="video_hours" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Cert Option</label>
+                                <select name="certificate" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                                    <option value="Yes">Enabled</option>
+                                    <option value="No">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Col -->
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Articles</label>
+                                <input type="number" name="articles" value="5" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assets</label>
+                                <input type="number" name="resources" value="10" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assigned</label>
+                                <input type="number" name="assignments" value="2" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Instructor Identity</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" name="instructor_name" placeholder="Full Name" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                                <input type="text" name="instructor_designation" placeholder="Designation" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Visual ID (Thumbnail)</label>
+                            <input type="file" name="thumbnail" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Syllabus Highlights (Line separated)</label>
+                            <textarea name="what_you_will_learn" rows="3" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-slate-50 flex justify-end">
+                    <button type="submit" name="add_course" class="bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] px-10 py-4 rounded-2xl hover:bg-blue-600 transition shadow-xl shadow-slate-100">
+                        Launch Course to Registry
+                    </button>
+                </div>
+            </form>
         </div>
-        <div>
-          <label class="block font-semibold mb-1">Downloadable Resources</label>
-          <input type="number" name="resources" required class="w-full border rounded px-3 py-2">
+
+        <!-- Course Inventory -->
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden text-sm">
+            <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+                <h3 class="font-black text-slate-900 uppercase tracking-widest text-xs">Platform Registry</h3>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Inventory</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Module</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Faculty</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Duration</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Cert</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <?php while($row = $courses->fetch_assoc()): ?>
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-4">
+                                    <img src="<?= htmlspecialchars($row['thumbnail']) ?>" class="w-14 h-10 object-cover rounded-lg shadow-sm">
+                                    <span class="font-bold text-slate-800"><?= htmlspecialchars($row['title']) ?></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5 font-black text-blue-600 text-[10px] uppercase"><?= htmlspecialchars($row['cat_name'] ?? 'Core') ?></td>
+                            <td class="px-6 py-5">
+                                <p class="font-bold text-slate-700"><?= htmlspecialchars($row['instructor_name']) ?></p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter"><?= htmlspecialchars($row['instructor_designation']) ?></p>
+                            </td>
+                            <td class="px-6 py-5 font-black text-slate-500 uppercase text-[10px]"><?= $row['video_hours'] ?> Hrs</td>
+                            <td class="px-6 py-5">
+                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $row['certificate'] === 'Yes' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400' ?>">
+                                    <?= $row['certificate'] === 'Yes' ? 'Enabled' : 'Locked' ?>
+                                </span>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="flex items-center justify-center gap-3">
+                                    <a href="edit_course.php?id=<?= $row['id'] ?>" class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="?delete_id=<?= $row['id'] ?>" onclick="return confirm('Erase this course and all associated lessons?')" class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-400 hover:bg-rose-600 hover:text-white transition">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div>
-          <label class="block font-semibold mb-1">Assignments</label>
-          <input type="number" name="assignments" required class="w-full border rounded px-3 py-2">
-        </div>
-      </div>
-
-      <!-- Certificate -->
-      <div>
-        <label class="block font-semibold mb-1">Certificate Provided?</label>
-        <select name="certificate" class="w-full border rounded px-3 py-2">
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </div>
-
-      <!-- Full Description -->
-      <div>
-        <label class="block font-semibold mb-1">Full Course Description</label>
-        <textarea name="full_description" rows="5" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"></textarea>
-      </div>
-
-      <!-- Instructor Details -->
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block font-semibold mb-1">Instructor Name</label>
-          <input type="text" name="instructor_name" required class="w-full border rounded px-3 py-2">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Instructor Designation</label>
-          <input type="text" name="instructor_designation" required class="w-full border rounded px-3 py-2">
-        </div>
-      </div>
-
-      <!-- Course Overview -->
-      <div>
-        <label class="block font-semibold mb-1">Course Overview</label>
-        <textarea name="overview" rows="4" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"></textarea>
-      </div>
-
-      <!-- What You Will Learn -->
-      <div>
-        <label class="block font-semibold mb-1">What You Will Learn (One per line)</label>
-        <textarea name="what_you_will_learn" rows="4" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"></textarea>
-      </div>
-
-      <!-- Thumbnail Upload -->
-      <div>
-        <label class="block font-semibold mb-1">Course Thumbnail</label>
-        <input type="file" name="thumbnail" accept="image/*" required class="w-full border rounded px-3 py-2">
-      </div>
-
-      <!-- Submit Button -->
-      <div>
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-          Add Course
-        </button>
-      </div>
-
-    </form>
-  </main>
-<!-- Course List Table -->
-    <div class="bg-white p-6 rounded-xl shadow ml-64 mt-20">
-        <h2 class="text-xl font-bold mb-4">Uploaded Courses</h2>
-        <table class="w-full table-auto border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border border-gray-300 p-2">Thumbnail</th>
-                    <th class="border border-gray-300 p-2">Title</th>
-                    <th class="border border-gray-300 p-2">Instructor</th>
-                    <th class="border border-gray-300 p-2">Video Hours</th>
-                    <th class="border border-gray-300 p-2">Certificate</th>
-                    <th class="border border-gray-300 p-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $courses->fetch_assoc()): ?>
-                <tr>
-                    <td class="border border-gray-300 p-2">
-                        <img src="<?= htmlspecialchars($row['thumbnail']) ?>" class="w-20 h-12 object-cover rounded">
-                    </td>
-                    <td class="border border-gray-300 p-2"><?= htmlspecialchars($row['title']) ?></td>
-                    <td class="border border-gray-300 p-2"><?= htmlspecialchars($row['instructor_name']) ?></td>
-                    <td class="border border-gray-300 p-2"><?= htmlspecialchars($row['video_hours']) ?></td>
-                    <td class="border border-gray-300 p-2"><?= htmlspecialchars($row['certificate']) ?></td>
-                    <td class="border border-gray-300 p-2">
-                        <a href="edit_course.php?id=<?= $row['id'] ?>" class="text-blue-600">Edit</a> | 
-                        <a href="delete_course.php?id=<?= $row['id'] ?>" class="text-red-600" onclick="return confirm('Delete this course?');">Delete</a>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+      </main>
     </div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
+</body>
+</html>
 
       <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 

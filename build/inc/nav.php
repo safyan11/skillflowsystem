@@ -1,8 +1,8 @@
 <nav class="bg-black py-6 xl:px-20 lg:px-10 px-5   ">
   <div class="flex justify-between items-center text-white ">
     <div class="flex items-center space-x-4">
-      <img src="" alt="">
-      <h1 class="md:text-2xl text-xl font-bold">Skill Flow</h1>
+      <img src="./assets/img/teachmate_logo.png" alt="TeachMate Logo" class="h-10 w-auto rounded-lg shadow-lg">
+      <h1 class="md:text-2xl text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 drop-shadow-sm">TeachMate</h1>
     </div>
 
     <!-- Menu -->

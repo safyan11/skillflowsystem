@@ -1,9 +1,9 @@
 <?php
 error_reporting(0);
 session_start();
-// Include database connection - now in the same build folder
+
 require_once "inc/db.php";
-// Include header and nav
+
 require_once "inc/header.php";
 require_once "inc/nav.php";
 
@@ -53,62 +53,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-<body class="bg-[#fbfbfb]">
-    <section class="2xl:px-16 xl:px-16 2xl:py-20 xl:py-20 lg:px-10 lg:py-16">
-        <div class="pop flex flex-col lg:flex-row justify-between items-center 2xl:gap-24 bg-white dark:border-black border md:rounded-3xl 2xl:px-32 md:px-16 w-full">
-            <div class="2xl:py-56 xl:py-36 md:w-3/5 p-5">
-                 <div>
-                    <img src="assets/img/skillflow.png" class="w-44"  alt="">
+<body class="bg-black relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Immersive Background -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/40 rounded-full mix-blend-screen filter blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/40 rounded-full mix-blend-screen filter blur-[100px]"></div>
+        <img src="./assets/img/modern-bg.jpg" class="w-full h-full object-cover opacity-30" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80';">
+    </div>
+
+    <!-- Blur Overlay -->
+    <div class="absolute inset-0 z-0 backdrop-blur-xl bg-black/20"></div>
+
+    <style>
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-modal {
+            animation: modalPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+
+    <section class="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-12 flex justify-center items-center">
+        <!-- Centered Glass Modal -->
+        <div class="glass-card w-full max-w-lg rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden border border-white/20 bg-black/40 backdrop-blur-[40px] animate-modal p-8 sm:p-12">
+            
+            <form action="" method="POST">
+                <!-- Logo Header -->
+                <div class="text-center mb-10 flex flex-col items-center">
+                    <img src="./assets/img/teachmate_logo.png" alt="TeachMate" class="h-16 w-16 mb-4 rounded-xl shadow-lg border border-white/10">
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h2>
+                    <p class="text-sm font-medium text-gray-300 mt-2">Don't have an account? <a href="signup.php" class="text-emerald-400 font-bold hover:text-emerald-300 transition underline-offset-2 hover:underline">Create one</a></p>
                 </div>
-                <p class="2xl:text-2xl xl:text-xl md:text-sm font-semibold 2xl:pl-20 text-center lg:text-left text-xs text-black">Log in to Your Account for Seamless Access</p>
-            </div>
-            <div class="lg:w-2/5 px-5 lg:px-0">
-                <form action="" method="POST" class="md:py-20 py-10">
-                    <div class="bg-white shadow-xl border border-black rounded-3xl 2xl:px-10 py-10 md:px-5 md:py-20">
-                        <div class="text-center pt-5 lg:pt-0 text-black">
-                            <h2 class="2xl:text-4xl md:text-lg font-bold">Welcome Back!</h2>
-                            <p class="2xl:text-sm md:text-xs font-medium 2xl:pt-2 md pt-1 text-xs text-black">Don't have an account? <a href="signup.php"><span class="text-sm font-bold hover:underline">Sign Up</span></a></p>
-                        </div>
-                        <?php if (!empty($loginError)): ?>
-                            <p style="color: red; text-align: center; margin-top: 10px; font-size: 14px;"><?php echo $loginError; ?></p>
-                        <?php endif; ?>
-                        <div class="space-y-4 2xl:pt-20 md:pt-10 pt-5 px-2 md:px-0">
-                              <div class="space-y-2">
-                                <label class=" mb-2 text-sm font-semibold text-black">Email</label>
-                                <input name="email" class="focus:bg-white focus:text-black border border-gray-200 text-gray-900 sm:text-sm rounded-lg block w-full 2xl:px-3 2xl:py-4 md:px-2 md:py-2 px-1 py-2" placeholder="Enter your email" id="name" type="text" required>
-                              </div>
-            <div class="space-y-2" x-data="{ show: false }">
-              <label class="mb-2 text-sm font-semibold text-black">Password</label>
-              <div class="relative">
-                  <input name="password" :type="show ? 'text' : 'password'" class="focus:text-black border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full 2xl:px-3 2xl:py-4 md:px-2 md:py-2 px-1 py-2 pr-10" placeholder="Enter your password" id="password" required>
-                  <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center px-3">
-                      <i :class="show ? 'fa fa-eye' : 'fa fa-eye-slash'" class="text-gray-500 dark:text-gray-600"></i>
-                  </button>
-              </div>
-          </div>
-          <div class="flex flex-col">
-              <label class="mb-2 text-sm font-semibold text-black">User Role</label>
-              <select name="role" class="focus:bg-white focus:text-black border border-gray-200 text-gray-900 sm:text-sm rounded-lg block w-full 2xl:px-3 2xl:py-4 md:px-2 md:py-2 px-1 py-2" required>
-                  <option value="">Select your role</option>
-                  <option value="admin">Admin</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="student">Student</option>
-              </select>
-          </div>
-          <div>
-              <button type="submit" class="text-base font-semibold 2xl:py-3 md:py-1 py-1 bg-white hover:bg-black text-black w-full hover:text-white border rounded-lg mt-5">Log in</button>
-          </div>
-         <div class="form-footer">
-<p><a href="auth/forgot_password.php">Forgot Password?</a></p></div>
-          <div class="flex items-center gap-3">
-              <input class="-mt-6 md:-mt-0 w-5 h-5 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 bg-gray-700 border-gray-600 focus:ring-primary-600 ring-offset-gray-800 accent-black" type="checkbox" aria-describedby="terms" id="terms">
-              <p class="md:text-xs text-[8px] pb-5 md:pb-0 text-black">By clicking Create account, I agree that I have read and accepted the <a href="" class="font-semibold hover:underline text-black">Terms of Use</a> and <a href="" class="font-semibold text-black hover:underline">Privacy Policy.</a></p>
-          </div>
+                
+                <?php if (!empty($loginError)): ?>
+                    <div class="bg-red-500/20 border border-red-500/50 text-red-100 p-4 rounded-xl text-sm font-bold flex items-center gap-3 backdrop-blur-md mb-6 shadow-inner">
+                        <i class="fa-solid fa-circle-exclamation text-lg text-red-400"></i>
+                        <?= $loginError ?>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-200">Email Address</label>
+                        <input name="email" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none placeholder-gray-400 backdrop-blur-md shadow-inner" placeholder="user@example.com" type="email" required>
+                    </div>
+                    
+                    <div x-data="{ show: false }">
+                        <label class="block mb-2 text-sm font-bold text-gray-200">Password</label>
+                        <div class="relative">
+                            <input name="password" :type="show ? 'text' : 'password'" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none placeholder-gray-400 pr-12 backdrop-blur-md shadow-inner" placeholder="••••••••" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center px-5 text-gray-300 hover:text-white transition-colors">
+                                <i :class="show ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                            </button>
                         </div>
                     </div>
-                </form>
-            </div>
+                    
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-200">User Role</label>
+                        <select name="role" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none cursor-pointer backdrop-blur-md shadow-inner [&>option]:bg-gray-900" required>
+                            <option value="">Select your role</option>
+                            <option value="admin">Admin</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <a href="auth/forgot_password.php" class="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition underline-offset-2 hover:underline drop-shadow-md">Forgot Password?</a>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-bold text-lg shadow-[0_0_20px_rgba(52,211,153,0.3)] hover:shadow-[0_0_30px_rgba(52,211,153,0.5)] hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2">
+                            <span>Sign In</span>
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
     </section>
     
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js" defer></script>

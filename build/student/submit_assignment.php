@@ -66,21 +66,13 @@ if ($result && $result->num_rows > 0) {
 } else {
     $sql_insert = "INSERT INTO assignment_submissions (assignment_id, student_id, filename, filesize, submitted_at) VALUES ($assignment_id, $student_id, '$filename_sql', $filesize, NOW())";
     if ($conn->query($sql_insert)) {
-    
-    // Insert into grading table
-    $sql_insert_grading = "INSERT INTO grading (assignment_id, student_id, total_marks, obtained_marks, percentage, grade, status, graded_at) VALUES (?, ?, 100, 0, 0, '', 'Pending', NULL)";
-    
-    $stmt = $conn->prepare($sql_insert_grading);
-    $stmt->bind_param("ii", $assignment_id, $student_id);
-    $stmt->execute();
-    $stmt->close();
-
-} else {
-    // Handle error if needed
-    echo "Error inserting submission: " . $conn->error;
-}
-    $conn->query($sql_insert);
-    
+        // Initialize grading record for teacher visibility
+        $sql_grade = "INSERT INTO grading (assignment_id, student_id, total_marks, obtained_marks, percentage, grade, status) VALUES (?, ?, 100, 0, 0, '', 'Pending') ON DUPLICATE KEY UPDATE status='Pending'";
+        $stmt_g = $conn->prepare($sql_grade);
+        $stmt_g->bind_param("ii", $assignment_id, $student_id);
+        $stmt_g->execute();
+        $stmt_g->close();
+    }
 }
 
 header('Location: assignment.php?status=success');

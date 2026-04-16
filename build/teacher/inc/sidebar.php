@@ -1,48 +1,81 @@
-  <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-20 w-64 bg-white border-r border-gray-200 px-4 py-6 transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0">
-      <div class="items-center mb-8">
+<?php
+// ─── Badge Logic for Teacher ───
+$teacher_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
 
-        <img src="../assets/img/skillflow.png" class="w-28"  alt="">
+// Check unread chat messages
+$r = $conn->query("SELECT COUNT(*) as c FROM chat_messages WHERE receiver_id=$teacher_id AND is_read=0");
+$unread_chat_count = $r ? $r->fetch_assoc()['c'] : 0;
 
+// Check pending assignment submissions for this teacher's assignments
+$r = $conn->query("SELECT COUNT(*) as c FROM submissions s JOIN assignments a ON s.assignment_id = a.id WHERE a.uploaded_by = $teacher_id AND s.status = 'pending'");
+$pending_submissions_count = $r ? $r->fetch_assoc()['c'] : 0;
+
+// Check if attendance is NOT marked for a class scheduled for today
+$r = $conn->query("SELECT COUNT(*) as c FROM online_classes oc WHERE oc.teacher_id = $teacher_id AND oc.class_date = CURDATE() AND NOT EXISTS (SELECT 1 FROM attendance att WHERE att.class_id = oc.id LIMIT 1)");
+$unmarked_attendance_count = $r ? $r->fetch_assoc()['c'] : 0;
+
+function teacher_badge($count) {
+    if ($count > 0) {
+        return "<span class=\"ml-auto bg-blue-600 text-white text-[10px] font-bold rounded-full px-2 py-0.5\">$count</span>";
+    }
+    return "";
+}
+?>
+
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-20 w-64 bg-white border-r border-gray-200 transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0">
+      <div class="px-8 py-6 flex items-center gap-3">
+          <img src="../assets/img/teachmate_logo.png" alt="TeachMate Logo" class="w-12 h-12 rounded-[10px] shadow-md shadow-blue-200">
+          <div>
+              <h2 class="text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">TeachMate</h2>
+              <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-0.5">Faculty Portal</p>
+          </div>
       </div>
-      <div class="space-y-2">
-        <a href="./teacherdashboard.php" class="flex items-center px-3 py-2 rounded-md active">
-          <span class="mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h7v7H3V3zm11 0h7v4h-7V3zm0 6h7v11h-7V9zm-11 9h7v2H3v-2z" />
-            </svg>
-          </span>
-          Dashboard
+
+      <nav class="mt-6 px-4 space-y-2">
+        <p class="text-xs text-gray-400 uppercase font-semibold px-2 mb-2">Main Menu</p>
+        
+        <a href="./teacherdashboard.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-th-large"></i>
+          <span class="text-sm font-medium">Dashboard</span>
         </a>
-        <a href="./studentstatus.php" class="flex items-center gap-4 px-3 py-2 rounded-md hover:bg-gray-100">
-         <i class="fa-solid fa-spinner text-xl"></i>
-          Student Status
+
+        <a href="./grading.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-graduation-cap"></i>
+          <span class="text-sm font-medium">Grading Assignment</span>
         </a>
-        <a href="./sharematerial.php" class="flex items-center px-3 py-2 gap-4 rounded-md hover:bg-gray-100 ">
-         <i class="fa-solid fa-file text-xl"></i>
-          Share material
+
+        <a href="./assignment.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-file-upload"></i>
+          <span class="text-sm font-medium">Assignment System</span>
+          <?= teacher_badge($pending_submissions_count) ?>
         </a>
-        <a href="./grading.php" class="flex items-center px-3 py-2 gap-4 rounded-md hover:bg-gray-100">
-         <i class="fa-solid fa-medal text-xl"></i>
-          Grading
+
+
+
+        <p class="text-xs text-gray-400 uppercase font-semibold px-2 mt-6 mb-2">Resources</p>
+
+        <a href="./sharematerial.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-share-alt"></i>
+          <span class="text-sm font-medium">Share Material</span>
         </a>
-         <a href="./onlineclass.php" class="flex items-center px-3 py-2 gap-4 rounded-md hover:bg-gray-100">
-         <i class="fa-solid fa-medal text-xl"></i>
-          Online Class
+
+        <a href="./onlineclass.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-video"></i>
+          <span class="text-sm font-medium">Online Class</span>
         </a>
-        <a href="./livechat.php" class="flex items-center px-3 py-2 gap-4 rounded-md hover:bg-gray-100">
-       <i class="fa-solid fa-message text-xl"></i>
-          Live Chat
+
+
+
+        <a href="./profile.php" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+          <i class="fas fa-user-circle"></i>
+          <span class="text-sm font-medium">Profile Settings</span>
         </a>
-        <a href="./assighnment.php" class="flex items-center px-3 py-2 gap-4 rounded-md hover:bg-gray-100">
-         <i class="fa-solid fa-file-arrow-up text-xl"></i>
-          Upload Assignment
-        </a>
-        <div class="mt-6">
-          <a href="../index.php" class="flex items-center px-3 py-2 gap-4 rounded-md text-red-600 hover:bg-red-50">
-          <i class="fa-solid fa-arrow-right-from-bracket text-xl"></i>
-            Logout
+
+        <div class="pt-10">
+          <a href="../index.php" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="text-sm font-medium">Logout</span>
           </a>
         </div>
-      </div>
+      </nav>
     </aside>

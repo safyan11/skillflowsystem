@@ -1,70 +1,75 @@
-      <!-- top bar -->
-      <header class="px-4 py-4 border-b border-gray-200 bg-white">
-        <div class="flex justify-between items-center space-x-4">
-          <img src="./assets/img/logodashboard.png" class="w-20 md:hidden block" alt="">
-          <button id="menu-btn" class="md:hidden p-2 rounded-md border border-gray-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-        
-        </div>
+      <header class="px-6 py-4 bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100">
+        <div class="flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-8">
+          
+          <!-- Command Search -->
+          <form method="GET" action="studentdashboard.php" class="relative w-full lg:max-w-xl group">
+            <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-blue-600 transition"></i>
+            </div>
+            <input type="text" name="search" placeholder="Search for courses, modules, or labs..." 
+                   value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" 
+                   class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-3.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600 focus:bg-white transition shadow-sm group-hover:shadow-md">
+          </form>
 
-        <div class="flex md:flex-row flex-col-reverse justify-between items-center space-x-4 pt-10 md:pt-0">
-          <div class="relative w-full lg:w-1/2">
-            <input type="text" placeholder="Search" class="pl-3 pr-10 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-            <div class="absolute right-2 top-1/2 -translate-y-1/2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
-              </svg>
+          <!-- Interaction Suite -->
+          <div class="flex items-center gap-6 w-full lg:w-auto justify-between lg:justify-end">
+            <!-- Shortcuts -->
+            <div class="hidden md:flex items-center gap-4">
+                <button class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition shadow-sm">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <div class="h-6 w-[1px] bg-slate-100"></div>
+            </div>
+
+            <!-- Identity Core -->
+            <div class="relative group">
+              <?php
+              $user_name = 'Guest Participant';
+              $profile_img = 'https://ui-avatars.com/api/?name=Guest&background=0D8ABC&color=fff';
+              
+              if (isset($_SESSION['user_id'])) {
+                  $user_id = intval($_SESSION['user_id']);
+                  $stmt = $conn->prepare("SELECT name, profile_image FROM users WHERE id = ?");
+                  $stmt->bind_param("i", $user_id);
+                  $stmt->execute();
+                  $stmt->bind_result($name, $db_image);
+                  if ($stmt->fetch()) {
+                      $user_name = htmlspecialchars($name);
+                      if (!empty($db_image)) $profile_img = "../uploads/profile/" . $db_image;
+                  }
+                  $stmt->close();
+              }
+              ?>
+              <button class="flex items-center gap-3 p-1.5 pr-4 bg-slate-50 hover:bg-slate-100 rounded-2xl transition border border-slate-100 group">
+                <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-white shadow-sm ring-2 ring-transparent group-hover:ring-blue-600/20 transition">
+                    <img src="<?= $profile_img ?>" class="w-full h-full object-cover">
+                </div>
+                <div class="text-left hidden sm:block">
+                    <p class="text-[11px] font-black text-slate-900 leading-none mb-0.5"><?= $user_name ?></p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Active Student</p>
+                </div>
+                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-blue-600 transition ml-2"></i>
+              </button>
+
+              <!-- Premium Dropdown (Hover) -->
+              <div class="absolute right-0 top-full mt-2 w-56 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                  <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 p-3">
+                      <a href="profile.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition text-slate-600 hover:text-blue-600">
+                          <i class="fa-solid fa-id-card-clip text-xs"></i>
+                          <span class="text-xs font-black uppercase tracking-widest">Profile Matrix</span>
+                      </a>
+                      <a href="certificate.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition text-slate-600 hover:text-emerald-600">
+                          <i class="fa-solid fa-award text-xs"></i>
+                          <span class="text-xs font-black uppercase tracking-widest">Achievements</span>
+                      </a>
+                      <div class="my-2 border-t border-slate-50"></div>
+                      <a href="../logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition group/out">
+                          <i class="fa-solid fa-power-off text-xs group-hover/out:rotate-90 transition duration-500"></i>
+                          <span class="text-xs font-black uppercase tracking-widest">Disconnect</span>
+                      </a>
+                  </div>
+              </div>
             </div>
           </div>
-
-
-         <div class="relative" x-data="{ open: false }">
-  <button id="user-menu-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 px-3 py-2" onclick="toggleUserMenu()">
-
-     <img src="https://i.pravatar.cc/32" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
-    <?php
-// adjust path to your DB connection file
-
-$user_name = 'Guest';
-if (isset($_SESSION['user_id'])) {
-    $user_id = intval($_SESSION['user_id']);
-    $stmt = $conn->prepare("SELECT name FROM users WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->bind_result($name);
-    if ($stmt->fetch()) {
-        $user_name = htmlspecialchars($name);
-    }
-    $stmt->close();
-}
-?>
-<span class="text-base font-medium"><?= $user_name ?></span>
-  
-    <!-- <svg id="chevron" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-    </svg> -->
-  </button>
-
-  <!-- dropdown -->
-  <!-- <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 hidden z-30" role="menu" aria-label="User menu">
-    <div class="px-4 py-2 text-xs text-gray-500">Signed in as</div>
-    <div class="px-4 pb-2">
-      <div class="font-semibold text-sm">Roh_ul_Hussnain</div>
-      <div class="text-gray-400 text-xs">Finance</div>
-    </div>
-    <div class="border-t border-gray-100 my-1"></div>
-    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2" role="menuitem">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7"/>
-      </svg>
-      <span class="text-sm text-red-600">Logout</span>
-    </button>
-  </div> -->
-</div>
-
-
         </div>
       </header>

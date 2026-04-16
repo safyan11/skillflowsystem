@@ -24,23 +24,27 @@
          <div class="relative" x-data="{ open: false }">
   <button id="user-menu-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 px-3 py-2" onclick="toggleUserMenu()">
 
-      <img src="https://i.pravatar.cc/32" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
-       <?php
-// adjust path to your DB connection file
-
+    <?php
+require_once '../inc/db.php';
 $user_name = 'Guest';
+$profile_img = 'https://i.pravatar.cc/32'; // Default
+
 if (isset($_SESSION['user_id'])) {
     $user_id = intval($_SESSION['user_id']);
-    $stmt = $conn->prepare("SELECT name FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT name, profile_image FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $stmt->bind_result($name);
+    $stmt->bind_result($name, $db_image);
     if ($stmt->fetch()) {
         $user_name = htmlspecialchars($name);
+        if (!empty($db_image)) {
+            $profile_img = "../uploads/profile/" . $db_image;
+        }
     }
     $stmt->close();
 }
 ?>
+    <img src="<?= $profile_img ?>" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
 <span class="text-base font-medium"><?= $user_name ?></span>
 <!--   
     <svg id="chevron" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

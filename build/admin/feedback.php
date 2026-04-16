@@ -1,83 +1,114 @@
-<?php require_once "inc/header.php"; ?>
-<body class="bg-gray-50 font-sans antialiased">
-  <div class="min-h-screen flex">
-  <?php require_once "inc/sidebar.php"; ?>
+<?php 
+require_once "inc/header.php"; 
+require_once "../inc/db.php"; 
 
-    <!-- Overlay for mobile when sidebar open -->
-    <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
+$message = "";
 
-    <!-- Main content area -->
-    <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
-      <!-- top bar -->
-  
- <?php require_once "inc/topbar.php"; ?>
- 
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">Review Feedback</h1>
+// Handle Delete
+if (isset($_GET['delete_id'])) {
+    $del_id = intval($_GET['delete_id']);
+    if ($conn->query("DELETE FROM feedback WHERE id=$del_id")) {
+        $message = "Feedback review purged from registry.";
+    }
+}
 
-    <!-- Expandable Comment Card -->
-    <div class="space-y-4">
-
-     <?php
-
-require '../inc/db.php';
-// Fetch feedback only from feedback table
-$sql = "SELECT * FROM feedback ORDER BY created_at DESC LIMIT 10";
+// Fetch feedback with associated user and course details
+$sql = "SELECT f.*, u.name AS std_name, u.email AS std_email, c.title AS course_title 
+        FROM feedback f
+        LEFT JOIN users u ON f.user_id = u.id
+        LEFT JOIN courses c ON f.course_id = c.id
+        ORDER BY f.created_at DESC";
 $result = $conn->query($sql);
 
 function renderStars($rating) {
-    $fullStars = floor($rating);
-    $halfStar = ($rating - $fullStars) >= 0.5;
-    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-
-    $starsHtml = str_repeat('★', $fullStars);
-    if ($halfStar) $starsHtml .= '☆'; // or half star
-    $starsHtml .= str_repeat('☆', $emptyStars);
-
-    return $starsHtml;
+    $html = '<div class="flex gap-1 text-[10px]">';
+    for ($i = 1; $i <= 5; $i++) {
+        $color = $i <= $rating ? 'text-amber-400' : 'text-slate-200';
+        $html .= '<i class="fa-solid fa-star ' . $color . '"></i>';
+    }
+    $html .= '</div>';
+    return $html;
 }
-
-if ($result && $result->num_rows > 0):
-    while ($row = $result->fetch_assoc()):
-        $ratingStars = renderStars($row['rating']);
 ?>
-    <div class="bg-white rounded-2xl shadow group transition-all duration-300 overflow-hidden p-4 hover:p-6">
-      <div class="flex justify-between items-start">
-        <div class="flex gap-4">
-          <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-semibold text-white">
-            <?= htmlspecialchars($row['user_id']) ?>
-          </div>
-          <div>
-            <p class="font-semibold">User ID: <?= htmlspecialchars($row['user_id']) ?></p>
-            <p class="text-sm text-gray-700">Course ID: <?= htmlspecialchars($row['course_id']) ?></p>
-          </div>
+
+<body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
+  <div class="min-h-screen flex">
+    <?php require_once "inc/sidebar.php"; ?>
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
+      <?php require_once "inc/topbar.php"; ?>
+
+      <main class="p-6 lg:p-10">
+        <div class="mb-10 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-black tracking-tight">Public Reviews</h1>
+                <p class="text-slate-500 font-medium">Monitor student sentiment and course performance metrics.</p>
+            </div>
+            <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-6">
+                <div class="text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aggregate</p>
+                    <p class="font-black text-slate-900">4.8</p>
+                </div>
+                <div class="w-px h-8 bg-slate-100"></div>
+                <div class="text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+                    <p class="font-black text-slate-900"><?= $result->num_rows ?></p>
+                </div>
+            </div>
         </div>
-        <p class="text-sm text-gray-500 whitespace-nowrap"><?= date('j M Y', strtotime($row['created_at'])) ?></p>
-      </div>
 
-      <!-- Star Rating -->
-      <div class="text-yellow-500 text-lg mb-2"><?= $ratingStars ?></div>
+        <?php if ($message): ?>
+            <div class="bg-rose-50 text-rose-700 p-4 rounded-2xl mb-8 font-bold border border-rose-100 flex items-center gap-3">
+                <i class="fa-solid fa-trash-can"></i> <?= $message ?>
+            </div>
+        <?php endif; ?>
 
-      <div class="mt-4 max-h-0 opacity-0 group-hover:max-h-[500px] group-hover:opacity-100 transition-all duration-500 text-sm text-gray-700">
-        <p><?= nl2br(htmlspecialchars($row['comments'])) ?></p>
-      </div>
-    </div>
-<?php
-    endwhile;
-else:
-    echo "<p>No feedback available.</p>";
-endif;
+        <!-- Feedback Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <?php if ($result && $result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 hover:shadow-xl hover:shadow-slate-200/50 transition duration-300 group">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-black text-slate-400 uppercase text-lg border border-slate-100">
+                                    <?= substr($row['std_name'] ?? 'U', 0, 1) ?>
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-slate-800 text-sm"><?= htmlspecialchars($row['std_name'] ?? 'Anonymous Participant') ?></h3>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mb-2"><?= date('d M Y \• H:i', strtotime($row['created_at'])) ?></p>
+                                    <?= renderStars($row['rating']) ?>
+                                </div>
+                            </div>
+                            <a href="?delete_id=<?= $row['id'] ?>" onclick="return confirm('Erase this review?')" class="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        </div>
 
-$conn->close();
-?>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6">
+                            <p class="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-1">Impacted Curriculum</p>
+                            <p class="font-bold text-slate-700 text-xs"><?= htmlspecialchars($row['course_title'] ?? 'General Experience') ?></p>
+                        </div>
 
-
-
-
-
+                        <div class="relative">
+                            <i class="fa-solid fa-quote-left absolute -top-2 -left-2 text-slate-100 text-3xl -z-0"></i>
+                            <p class="text-slate-600 text-sm italic font-medium leading-relaxed relative z-10 pl-2">
+                                "<?= nl2br(htmlspecialchars($row['comments'])) ?>"
+                            </p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="col-span-full py-20 text-center">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-comment-slash text-slate-200 text-3xl"></i>
+                    </div>
+                    <h2 class="text-xl font-black text-slate-300 uppercase tracking-widest">No Feedback Recorded</h2>
+                    <p class="text-slate-400 font-medium">Student perspectives will appear here once submitted.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+      </main>
     </div>
   </div>
-
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>
