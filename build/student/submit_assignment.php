@@ -55,32 +55,24 @@ $filesize = $file['size'];
 $filename_sql = $conn->real_escape_string($new_filename);
 
 // Check if submission exists
-$sql_check = "SELECT id FROM assignment_submissions WHERE assignment_id = $assignment_id AND student_id = $student_id";
+$sql_check = "SELECT id FROM submissions WHERE assignment_id = $assignment_id AND student_id = $student_id";
 $result = $conn->query($sql_check);
 
 if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $id = $row['id'];
-    $sql_update = "UPDATE assignment_submissions SET filename='$filename_sql', filesize=$filesize, submitted_at=NOW(), status='pending' WHERE id=$id";
+    $sql_update = "UPDATE submissions SET filename='$filename_sql', filesize=$filesize, submitted_at=NOW(), status='pending' WHERE id=$id";
     $conn->query($sql_update);
 } else {
-    $sql_insert = "INSERT INTO assignment_submissions (assignment_id, student_id, filename, filesize, submitted_at) VALUES ($assignment_id, $student_id, '$filename_sql', $filesize, NOW())";
+    $sql_insert = "INSERT INTO submissions (assignment_id, student_id, filename, filesize, submitted_at) VALUES ($assignment_id, $student_id, '$filename_sql', $filesize, NOW())";
     if ($conn->query($sql_insert)) {
-    
-    // Insert into grading table
-    $sql_insert_grading = "INSERT INTO grading (assignment_id, student_id, total_marks, obtained_marks, percentage, grade, status, graded_at) VALUES (?, ?, 100, 0, 0, '', 'Pending', NULL)";
-    
-    $stmt = $conn->prepare($sql_insert_grading);
-    $stmt->bind_param("ii", $assignment_id, $student_id);
-    $stmt->execute();
-    $stmt->close();
-
-} else {
-    // Handle error if needed
-    echo "Error inserting submission: " . $conn->error;
-}
-    $conn->query($sql_insert);
-    
+        // Initialize grading record for teacher visibility
+        $sql_grade = "INSERT INTO grading (assignment_id, student_id, total_marks, obtained_marks, percentage, grade, status) VALUES (?, ?, 100, 0, 0, '', 'Pending') ON DUPLICATE KEY UPDATE status='Pending'";
+        $stmt_g = $conn->prepare($sql_grade);
+        $stmt_g->bind_param("ii", $assignment_id, $student_id);
+        $stmt_g->execute();
+        $stmt_g->close();
+    }
 }
 
 header('Location: assignment.php?status=success');

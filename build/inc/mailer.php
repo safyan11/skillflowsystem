@@ -2,9 +2,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
+require __DIR__ . '/../PHPMailer-master/src/Exception.php';
+require __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
+require __DIR__ . '/../PHPMailer-master/src/SMTP.php';
 
 function sendEmail($to, $subject, $body) {
     $mail = new PHPMailer(true);
@@ -13,13 +13,13 @@ function sendEmail($to, $subject, $body) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'safimughal.com@gmail.com'; // Your email
-        $mail->Password   = 'mwsu drsf dowt sxgr'; // Your app password
+        $mail->Username   = 'safimughal.com@gmail.com'; // Original sender email
+        $mail->Password   = 'mwsu drsf dowt sxgr'; // Keep existing for now, user may need to update
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom('your_email@gmail.com', 'Skill Flow System');
+        $mail->setFrom('safimughal.com@gmail.com', 'TeachMate LMS');
         $mail->addAddress($to);
 
         // Content

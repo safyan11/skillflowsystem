@@ -1,159 +1,229 @@
-<?php 
-require_once "inc/header.php"; 
-require_once "../inc/db.php"; 
+<?php
+require_once "inc/header.php";
+require_once "../inc/db.php";
 
-// Registered Users
-$totalUsers = $conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
+// ── Stats ─────────────────────────────────────────────────
+$total_users      = $conn->query("SELECT COUNT(*) as c FROM users")->fetch_assoc()['c'] ?? 0;
+$total_teachers   = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='teacher'")->fetch_assoc()['c'] ?? 0;
+$total_students   = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='student'")->fetch_assoc()['c'] ?? 0;
+$total_admins     = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='admin'")->fetch_assoc()['c'] ?? 0;
+$pending_complaints = $conn->query("SELECT COUNT(*) as c FROM complaints WHERE status='pending'")->fetch_assoc()['c'] ?? 0;
+$total_certificates = $conn->query("SELECT COUNT(*) as c FROM certificates")->fetch_assoc()['c'] ?? 0;
+$total_courses    = $conn->query("SELECT COUNT(*) as c FROM courses")->fetch_assoc()['c'] ?? 0;
+$pending_users    = $conn->query("SELECT COUNT(*) as c FROM users WHERE verify_status='pending'")->fetch_assoc()['c'] ?? 0;
 
-// Pending Complaints
-$pendingComplaints = $conn->query("SELECT COUNT(*) AS total FROM complaints WHERE status = 'pending'")->fetch_assoc()['total'];
+// ── Visit stats last 7 days ───────────────────────────────
+$visitsLabels = [];
+$visitsValues = [];
+for ($i = 6; $i >= 0; $i--) {
+    $d = date('Y-m-d', strtotime("-$i days"));
+    $visitsLabels[] = date('D', strtotime($d));
+    $v = $conn->query("SELECT visit_count FROM visit_statistics WHERE visit_date='$d'")->fetch_assoc()['visit_count'] ?? 0;
+    $visitsValues[] = $v;
+}
 
-// Certificates
-$totalCertificates = $conn->query("SELECT COUNT(*) AS total FROM certificates")->fetch_assoc()['total'];
-
-// Feedback Received (Assuming you have a 'feedback' table)
-$feedbackCount = $conn->query("SELECT COUNT(*) AS total FROM feedback")->fetch_assoc()['total'] ?? 0;
-
-// Remove Users (banned or deleted - assuming verify_status='ban')
-$bannedUsers = $conn->query("SELECT COUNT(*) AS total FROM users WHERE verify_status = 'ban'")->fetch_assoc()['total'];
-
-// Complaints Resolved
-$resolvedComplaints = $conn->query("SELECT COUNT(*) AS total FROM complaints WHERE status = 'resolved'")->fetch_assoc()['total'];
-$complaintResolveRate = ($resolvedComplaints + $pendingComplaints) > 0 ? round(($resolvedComplaints / ($resolvedComplaints + $pendingComplaints)) * 100, 2) : 0;
-
-// Active Teachers
-$activeTeachers = $conn->query("SELECT COUNT(*) AS total FROM users WHERE role = 'teacher' AND verify_status = 'approved'")->fetch_assoc()['total'];
-
-// Active Users Today (visit_statistics table)
-$today = date("Y-m-d");
-$activeToday = $conn->query("SELECT visit_count FROM visit_statistics WHERE visit_date = '$today'")->fetch_assoc()['visit_count'] ?? 0;
-
-// Most Active Student (based on submissions)
-$mostActiveStudent = $conn->query("
-    SELECT u.name, COUNT(s.id) AS submissions 
-    FROM assignment_submissions s 
-    JOIN users u ON s.student_id = u.id 
-    GROUP BY s.student_id 
-    ORDER BY submissions DESC 
-    LIMIT 1
-")->fetch_assoc();
-$mostActiveStudentName = $mostActiveStudent['name'] ?? 'N/A';
-
-// Top Scorer (based on grading)
-$topScorer = $conn->query("
-    SELECT u.name, MAX(g.obtained_marks) as marks
-    FROM grading g
-    JOIN users u ON g.student_id = u.id
-    GROUP BY g.student_id
-    ORDER BY marks DESC
-    LIMIT 1
-")->fetch_assoc();
-$topScorerName = $topScorer['name'] ?? 'N/A';
+// ── Role distribution ─────────────────────────────────────
+$roleData = [$total_admins, $total_teachers, $total_students];
 ?>
 
-<body class="bg-gray-50 font-sans antialiased">
-  <div class="min-h-screen flex">
+<body class="bg-slate-100" style="font-family:'Outfit',sans-serif;">
+<div class="flex min-h-screen">
 
-  <?php require_once "inc/sidebar.php"; ?>
+    <!-- Sidebar -->
+    <?php require_once "inc/sidebar.php"; ?>
 
-    <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
+    <!-- Main Content (offset by sidebar w-64 = 16rem) -->
+    <div class="flex-1 flex flex-col md:ml-64">
+        <?php require_once "inc/topbar.php"; ?>
 
-    <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
-      <?php require_once "inc/topbar.php"; ?>
+        <main class="p-6 lg:p-8 space-y-8">
 
-      <div class="p-6">
-    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+            <!-- Welcome Banner -->
+            <div class="rounded-2xl p-7 flex items-center justify-between" style="background:linear-gradient(135deg,#1e1b4b 0%,#4f46e5 100%);">
+                <div>
+                    <p class="text-indigo-200 text-sm font-semibold mb-1">Administration Panel ⚙️</p>
+                    <h1 class="text-2xl font-bold text-white">Dashboard Overview</h1>
+                    <p class="text-indigo-300 text-sm mt-1">Monitor users, complaints, and platform activity.</p>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                    <div class="text-center bg-white/10 rounded-xl px-5 py-3">
+                        <p class="text-3xl font-bold text-white"><?= $total_users ?></p>
+                        <p class="text-indigo-200 text-xs mt-1">Total Users</p>
+                    </div>
+                    <div class="text-center bg-white/10 rounded-xl px-5 py-3">
+                        <p class="text-3xl font-bold text-white"><?= $total_courses ?></p>
+                        <p class="text-indigo-200 text-xs mt-1">Courses</p>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Top stat cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Registered Users</div>
-          <div class="text-3xl font-semibold"><?= $totalUsers ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">👤</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Pending Complaints</div>
-          <div class="text-3xl font-semibold"><?= $pendingComplaints ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">📚</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Certificates</div>
-          <div class="text-3xl font-semibold"><?= $totalCertificates ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">🔗</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Feedback Received</div>
-          <div class="text-3xl font-semibold"><?= $feedbackCount ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">📝</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Remove Users</div>
-          <div class="text-3xl font-semibold"><?= $bannedUsers ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">💬</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Complaints Resolved</div>
-          <div class="text-3xl font-semibold"><?= $complaintResolveRate ?>%</div>
-        </div>
-        <div class="text-gray-400 text-3xl">📈</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center col-span-full sm:col-span-2 lg:col-span-1">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Active Teacher</div>
-          <div class="text-3xl font-semibold"><?= $activeTeachers ?></div>
-        </div>
-        <div class="text-gray-400 text-3xl">📥</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-gray-500 uppercase">Active User Today</div>
-          <div class="flex items-baseline gap-1">
-            <div class="text-3xl font-semibold"><?= $activeToday ?></div>
-            <div class="text-xs text-green-600">Excellent</div>
-          </div>
-        </div>
-      </div>
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center">
+                        <i class="fas fa-users text-indigo-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-semibold">Total Users</p>
+                        <h3 class="text-2xl font-bold text-slate-800"><?= $total_users ?></h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center">
+                        <i class="fas fa-comment-dots text-amber-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-semibold">Pending Complaints</p>
+                        <h3 class="text-2xl font-bold text-slate-800"><?= $pending_complaints ?></h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
+                        <i class="fas fa-certificate text-emerald-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-semibold">Certificates Issued</p>
+                        <h3 class="text-2xl font-bold text-slate-800"><?= $total_certificates ?></h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center">
+                        <i class="fas fa-user-clock text-red-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-semibold">Pending Users</p>
+                        <h3 class="text-2xl font-bold text-slate-800"><?= $pending_users ?></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Visit Statistics Line Chart -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                    <h2 class="text-base font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <i class="fas fa-chart-line text-indigo-500"></i> Visit Statistics (Last 7 Days)
+                    </h2>
+                    <canvas id="visitsChart" height="200"></canvas>
+                </div>
+
+                <!-- User Roles Donut -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                    <h2 class="text-base font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-indigo-500"></i> User Roles Distribution
+                    </h2>
+                    <div class="flex items-center justify-center gap-8">
+                        <div class="relative" style="width:140px;height:140px;">
+                            <canvas id="rolesChart" width="140" height="140"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span class="text-xl font-bold text-slate-800"><?= $total_users ?></span>
+                                <span class="text-xs text-slate-400">Users</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block"></span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Admins</p>
+                                    <p class="font-bold text-slate-700"><?= $total_admins ?></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Teachers</p>
+                                    <p class="font-bold text-slate-700"><?= $total_teachers ?></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-3 h-3 rounded-full bg-blue-400 inline-block"></span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Students</p>
+                                    <p class="font-bold text-slate-700"><?= $total_students ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="adduser.php" class="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-1 transition group">
+                    <div class="w-12 h-12 bg-indigo-50 group-hover:bg-indigo-600 rounded-xl flex items-center justify-center transition">
+                        <i class="fas fa-user-plus text-indigo-600 group-hover:text-white transition"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-600">Manage Users</span>
+                </a>
+                <a href="addcourse.php" class="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-1 transition group">
+                    <div class="w-12 h-12 bg-blue-50 group-hover:bg-blue-600 rounded-xl flex items-center justify-center transition">
+                        <i class="fas fa-book text-blue-600 group-hover:text-white transition"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-600">Add Course</span>
+                </a>
+                <a href="complaints.php" class="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-1 transition group">
+                    <div class="w-12 h-12 bg-amber-50 group-hover:bg-amber-500 rounded-xl flex items-center justify-center transition">
+                        <i class="fas fa-comment-dots text-amber-500 group-hover:text-white transition"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-600">Complaints</span>
+                </a>
+                <a href="certification.php" class="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-1 transition group">
+                    <div class="w-12 h-12 bg-emerald-50 group-hover:bg-emerald-600 rounded-xl flex items-center justify-center transition">
+                        <i class="fas fa-certificate text-emerald-500 group-hover:text-white transition"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-600">Certifications</span>
+                </a>
+            </div>
+
+        </main>
     </div>
-
-    <!-- Main grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="col-span-2 bg-white rounded-2xl shadow p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold">Recent Activity</h2>
-          <div class="text-sm text-gray-500">Live Users & Submissions</div>
-        </div>
-        <div class="min-h-[260px]">
-          <canvas id="combinedChart"></canvas>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">Student Activity</h2>
-        <div class="space-y-3 text-sm">
-          <div class="flex justify-between">
-            <div>Most Active Student</div>
-            <div class="text-gray-500"><?= $mostActiveStudentName ?></div>
-          </div>
-          <div class="flex justify-between bg-gray-50 rounded p-2">
-            <div>Top Scorer</div>
-            <div class="text-gray-500"><?= $topScorerName ?></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Visit Statistics
+new Chart(document.getElementById('visitsChart'), {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($visitsLabels) ?>,
+        datasets: [{
+            label: 'Daily Visits',
+            data: <?= json_encode($visitsValues) ?>,
+            borderColor: '#4f46e5',
+            backgroundColor: 'rgba(79,70,229,0.08)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#4f46e5',
+            pointRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false } }
+    }
+});
+
+// Roles Donut
+new Chart(document.getElementById('rolesChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Admins', 'Teachers', 'Students'],
+        datasets: [{
+            data: <?= json_encode($roleData) ?>,
+            backgroundColor: ['#4f46e5','#10b981','#60a5fa'],
+            borderWidth: 0,
+            hoverOffset: 6
+        }]
+    },
+    options: {
+        cutout: '72%',
+        plugins: { legend: { display: false } },
+        responsive: false
+    }
+});
+</script>
+
 </body>
 </html>
