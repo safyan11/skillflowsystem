@@ -65,12 +65,19 @@ $pending_approvals = $conn->query("SELECT COUNT(*) as c FROM users WHERE verify_
 $users_result = $conn->query("SELECT * FROM users ORDER BY created_at DESC");
 ?>
 
+<<<<<<< HEAD
 <body class="bg-slate-100" style="font-family:'Outfit',sans-serif;">
     <div class="flex min-h-screen">
         <?php require_once "inc/sidebar.php"; ?>
         
         <!-- Main Content (offset by sidebar w-64 = 16rem) -->
         <div class="flex-1 flex flex-col md:ml-64">
+=======
+<body class="bg-slate-50 relative before:fixed before:inset-0 before:-z-10 before:w-full before:h-full before:bg-\[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))\] before:from-blue-100 before:via-white before:to-emerald-50">
+    <div class="flex">
+        <?php require_once "inc/sidebar.php"; ?>
+        <div class="flex-1">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             <?php require_once "inc/topbar.php"; ?>
             <div class="p-8">
                 <div class="flex justify-between items-center mb-8">
@@ -107,8 +114,13 @@ $users_result = $conn->query("SELECT * FROM users ORDER BY created_at DESC");
                 <?php endif; ?>
 
                 <!-- User Table -->
+<<<<<<< HEAD
                 <div class="bg-white rounded-xl shadow-sm overflow-x-auto w-full border border-gray-100">
                     <table class="min-w-max w-full text-left border-collapse">
+=======
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                    <table class="w-full text-left border-collapse">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-100">
                                 <th class="px-6 py-4 font-bold text-gray-700">Name</th>

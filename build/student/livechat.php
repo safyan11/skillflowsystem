@@ -42,7 +42,11 @@ if ($chat_with > 0) {
 <body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
   <div class="min-h-screen flex">
     <?php require_once "inc/sidebar.php"; ?>
+<<<<<<< HEAD
     <div class="flex-1 flex flex-col ml-0 md:ml-72 transition-all duration-300 h-screen overflow-hidden">
+=======
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300 h-screen overflow-hidden">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
       <?php require_once "inc/topbar.php"; ?>
 
       <main class="flex-1 flex overflow-hidden">

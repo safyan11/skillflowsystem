@@ -51,11 +51,20 @@ $user = $conn->query("SELECT * FROM users WHERE id=$user_id")->fetch_assoc();
 $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['profile_image'] : "https://i.pravatar.cc/150";
 ?>
 
+<<<<<<< HEAD
 <body class="bg-gray-50" style="font-family:'Outfit',sans-serif;">
 <div class="min-h-screen flex">
   <?php require_once "inc/sidebar.php"; ?>
 
   <div class="flex-1 flex flex-col md:ml-64">
+=======
+<body class="bg-gray-50 font-sans antialiased">
+<div class="min-h-screen flex">
+  <?php require_once "inc/sidebar.php"; ?>
+  <div id="overlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden"></div>
+
+  <div class="flex-1 flex flex-col ml-0 md:ml-64 overflow-hidden">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     <?php require_once "inc/topbar.php"; ?>
 
     <div class="p-6 max-w-4xl mx-auto mt-6 w-full mb-12">
@@ -64,8 +73,13 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
               <i class="fa-solid fa-user-shield text-3xl text-white"></i>
           </div>
           <div>
+<<<<<<< HEAD
               <h1 class="text-3xl font-bold text-gray-800">Admin Profile</h1>
               <p class="text-gray-500">Manage your profile information and security settings.</p>
+=======
+              <h1 class="text-3xl font-bold text-gray-800">Admin Account</h1>
+              <p class="text-gray-500">System Administrator profile & security configuration</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
           </div>
       </div>
 
@@ -94,7 +108,11 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                 <div class="grid grid-cols-1 gap-6">
                     <div>
+<<<<<<< HEAD
                         <label class="block mb-2 font-bold text-gray-700 text-sm">Full Name</label>
+=======
+                        <label class="block mb-2 font-bold text-gray-700 text-sm">Full Admin Name</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <div class="relative">
                             <i class="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required
@@ -103,7 +121,11 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                     </div>
 
                     <div>
+<<<<<<< HEAD
                         <label class="block mb-2 font-bold text-gray-700 text-sm">Email Address</label>
+=======
+                        <label class="block mb-2 font-bold text-gray-700 text-sm">System Email</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <div class="relative">
                             <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required
@@ -112,7 +134,11 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                     </div>
 
                     <div class="pt-4 border-t">
+<<<<<<< HEAD
                         <label class="block mb-2 font-bold text-gray-700 text-sm">Change Password</label>
+=======
+                        <label class="block mb-2 font-bold text-gray-700 text-sm">Security Code (Password)</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <div class="relative">
                             <i class="fa-solid fa-shield-halved absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="password" name="password" placeholder="Verify login to change"
@@ -124,7 +150,11 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                 <div class="mt-8">
                     <button type="submit" name="update_profile" 
                         class="w-full bg-red-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-600/20">
+<<<<<<< HEAD
                         Upload
+=======
+                        Update System Profile
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </button>
                 </div>
             </div>

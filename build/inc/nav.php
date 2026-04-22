@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <nav class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
   <div class="w-full xl:px-20 lg:px-10 px-5 mx-auto">
     <div class="flex justify-between items-center h-20">
@@ -9,6 +10,45 @@
         </div>
         <h1 class="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 drop-shadow-sm">TeachMate</h1>
       </a>
+=======
+<nav class="bg-black py-6 xl:px-20 lg:px-10 px-5   ">
+  <div class="flex justify-between items-center text-white ">
+    <div class="flex items-center space-x-4">
+      <img src="./assets/img/teachmate_logo.png" alt="TeachMate Logo" class="h-10 w-auto rounded-lg shadow-lg">
+      <h1 class="md:text-2xl text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 drop-shadow-sm">TeachMate</h1>
+    </div>
+
+    <!-- Menu -->
+    <div class="hidden lg:flex">
+      <ul class="flex space-x-8 items-center">
+
+        <li><a href="./index.php" class="font-medium text-base">Home</a></li>
+
+        <!-- Courses Dropdown (Desktop Hover) -->
+        <li class="relative group">
+          <a href="./web.php" class="font-medium text-base flex items-center space-x-1">
+            <span>Courses</span>
+            <i class="fas fa-chevron-down transition-transform duration-300 group-hover:rotate-180"></i>
+          </a>
+
+          <ul class="absolute bg-white text-black rounded shadow-lg w-44 hidden group-hover:block">
+            <li><a href="./web.php" class="block px-4 py-2 hover:bg-black hover:text-white">Web Development</a></li>
+            <li><a href="./game.php" class="block px-4 py-2 hover:bg-black hover:text-white">Game Development</a></li>
+            <li><a href="./graphics.php" class="block px-4 py-2 hover:bg-black hover:text-white">Graphic Design</a></li>
+            <li><a href="./digital.php" class="block px-4 py-2 hover:bg-black hover:text-white">Digital Marketing</a></li>
+          </ul>
+        </li>
+
+        <li><a href="./about.php" class="font-medium text-base">About Us</a></li>
+        <li><a href="contact.php" class="font-medium text-base">Contact Us</a></li>
+
+        <!-- Login Dropdown (Desktop Hover) -->
+        <li class="relative group">
+          <a href="./login.php" class="font-medium text-base flex items-center space-x-1">
+            <span>Log In</span>
+           
+          </a>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 
       <!-- Desktop Menu -->
       <div class="hidden lg:flex items-center space-x-1">
@@ -49,6 +89,7 @@
     </div>
   </div>
 </nav>
+<<<<<<< HEAD
 
 <script>
   document.getElementById('mobile-nav-btn')?.addEventListener('click', () => {
@@ -65,3 +106,5 @@
     }
   });
 </script>
+=======
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9

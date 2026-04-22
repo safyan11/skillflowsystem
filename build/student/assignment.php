@@ -42,7 +42,11 @@ if (isset($_GET['status'])) {
 <body class="bg-slate-50 relative before:fixed before:inset-0 before:-z-10 before:w-full before:h-full before:bg-\[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))\] before:from-blue-100 before:via-white before:to-emerald-50">
     <div class="flex">
         <?php require_once "inc/sidebar.php"; ?>
+<<<<<<< HEAD
         <div class="flex-1 md:ml-72 transition-all duration-300">
+=======
+        <div class="flex-1">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             <?php require_once "inc/topbar.php"; ?>
             <div class="p-8">
                 <div class="flex justify-between items-center mb-8">
@@ -79,11 +83,19 @@ if (isset($_GET['status'])) {
                                 
                                 <div class="flex items-center gap-4 pt-4 border-t border-gray-50">
                                     <a href="../uploads/assignments/<?= $assignment['filename'] ?>" download class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
+<<<<<<< HEAD
                                         <i class="fa-solid fa-download"></i> Download File
                                     </a>
                                     <?php if ($submitted): ?>
                                         <span class="text-xs font-bold text-green-600 flex items-center gap-1">
                                             <i class="fa-solid fa-check"></i> Submission Uploaded
+=======
+                                        <i class="fa-solid fa-download"></i> Download Task
+                                    </a>
+                                    <?php if ($submitted): ?>
+                                        <span class="text-xs font-bold text-green-600 flex items-center gap-1">
+                                            <i class="fa-solid fa-check"></i> Already Uploaded
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                         </span>
                                     <?php else: ?>
                                         <form action="submit_assignment.php" method="POST" enctype="multipart/form-data" class="flex-1 flex gap-2">
@@ -100,8 +112,12 @@ if (isset($_GET['status'])) {
 
                 <h2 class="text-2xl font-bold mb-6">Grades & Feedback</h2>
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<<<<<<< HEAD
                     <div class="overflow-x-auto">
                         <table class="min-w-max w-full text-left">
+=======
+                    <table class="w-full text-left">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <thead class="bg-gray-50 border-b border-gray-100">
                             <tr>
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Assignment</th>

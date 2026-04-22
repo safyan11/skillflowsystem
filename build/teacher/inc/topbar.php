@@ -3,6 +3,7 @@
 $topbar_user_name = 'Guest';
 $topbar_profile_img = 'https://ui-avatars.com/api/?name=Teacher&background=059669&color=fff';
 
+<<<<<<< HEAD
 if (isset($_SESSION['user_id'])) {
     $tb_uid = intval($_SESSION['user_id']);
     $tb_stmt = $conn->prepare("SELECT name, profile_image FROM users WHERE id = ?");
@@ -12,15 +13,57 @@ if (isset($_SESSION['user_id'])) {
     if ($tb_stmt->fetch()) {
         $topbar_user_name = htmlspecialchars($tb_name);
         if (!empty($tb_img)) $topbar_profile_img = "../uploads/profile/" . $tb_img;
+=======
+        <div class="flex md:flex-row flex-col-reverse justify-between items-center space-x-4 pt-10 md:pt-0">
+          <div class="relative w-full lg:w-1/2">
+            <input type="text" placeholder="Search" class="pl-3 pr-10 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <div class="absolute right-2 top-1/2 -translate-y-1/2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+              </svg>
+            </div>
+          </div>
+
+
+         <div class="relative" x-data="{ open: false }">
+  <button id="user-menu-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-2 px-3 py-2" onclick="toggleUserMenu()">
+
+    <?php
+require_once '../inc/db.php';
+$user_name = 'Guest';
+$profile_img = 'https://i.pravatar.cc/32'; // Default
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = intval($_SESSION['user_id']);
+    $stmt = $conn->prepare("SELECT name, profile_image FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($name, $db_image);
+    if ($stmt->fetch()) {
+        $user_name = htmlspecialchars($name);
+        if (!empty($db_image)) {
+            $profile_img = "../uploads/profile/" . $db_image;
+        }
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
     $tb_stmt->close();
 }
 ?>
+<<<<<<< HEAD
 <header class="px-6 py-4 bg-white border-b border-gray-100 sticky top-0 z-10">
     <div class="flex items-center justify-between gap-4">
         <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-500 hover:text-blue-600 focus:outline-none transition">
             <i class="fas fa-bars text-xl"></i>
         </button>
+=======
+    <img src="<?= $profile_img ?>" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
+<span class="text-base font-medium"><?= $user_name ?></span>
+<!--   
+    <svg id="chevron" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg> -->
+  </button>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 
 
         <!-- Search -->

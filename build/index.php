@@ -26,11 +26,35 @@
 
 <body class="relative min-h-screen container-fluid bg-slate-950 font-sans text-slate-300 selection:bg-blue-500/30">
 
+<<<<<<< HEAD
     <!-- Immersive Animated Background -->
     <div class="fixed inset-0 z-0 pointer-events-none">
         <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse" style="animation-duration: 8s;"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[120px]" style="animation-duration: 10s; animation-direction: reverse;"></div>
         <img src="./assets/img/modern-bg.jpg" class="w-full h-full object-cover opacity-10" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80';">
+=======
+<?php require_once "inc/nav.php"; ?>
+
+
+
+<section class="h-96 bg-fixed bg-center bg-no-repeat bg-cover" style="background-image: url('./assets/img/banner\ img.webp');">
+  <div class="h-96 flex items-center justify-center bg-black bg-opacity-80">
+    <h1 class="md:text-4xl text-2xl font-bold text-white">TeachMate With Learning</h1>
+  </div>
+</section>
+<!-- hero section  -->
+<section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10" >
+  <div class="flex justify-center text-center">
+
+  <div class="lg:w-3/4 w-full">
+    <h1 class="text-black xl:text-6xl lg:text-5xl text-3xl font-medium">Education from Home</h1>
+    <p class="xl:text-lg text-base pt-4 text-[#666666]">Boost up your skills with a new way of learning .Best educational plateform that is providing best services to you anywhere anytime.we aim to empower students to change the world with unlock his skills.</p>
+
+    <div class="pt-10">
+      <a href="./signup.php">
+      <button class="bg-black py-2 px-6 text-white hover:bg-white hover:text-black border border-black">Sign Up</button>
+      </a>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     </div>
     <div class="fixed inset-0 z-0 backdrop-blur-[2px] bg-slate-950/70"></div>
 
@@ -252,6 +276,59 @@
         <?php require_once "inc/footer.php"; ?>
 
     </div>
+<<<<<<< HEAD
+=======
+
+     <div class="border border-black rounded-xl py-4 px-8">
+      <h1 class="text-black lg:text-2xl text-lg font-semibold"> <i class="fa-solid fa-certificate"></i> Online Courses</h1>
+      <p class="2xl:text-base text-sm pt-2 text-[#666666]">We are providing the facility of online courses to our student free</p>
+    </div>
+
+     <div class="border border-black rounded-xl py-4 px-8">
+      <h1 class="text-black lg:text-2xl text-lg font-semibold"> <i class="fas fa-award"></i> Provide Certification</h1>
+      <p class="2xl:text-base text-sm pt-2 text-[#666666]">We are providing the facility of certification to our student for features</p>
+    </div>
+  </div>
+</section>
+
+<!-- why chooes us  -->
+ 
+<section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10">
+  <div class="flex flex-col lg:flex-row justify-center items-center xl:gap-20 gap-10">
+    <div class="lg:w-1/2 w-full">
+      <img src="./assets/img/choose.jpg" class="w-full" alt="">
+    </div>
+    <div class="lg:w-1/2 w-full">
+      <h1 class="text-black lg:text-4xl text-2xl font-semibold">
+        Why Choose Us?
+      </h1>
+      <p class="2xl:text-base text-sm pt-4 2xl:leading-10 leading-7 text-[#666666]">
+        Education underpins all social progress. Our aim is to harness technology to make all education and skills training available to anyone, anywhere for free.We believe that free education, more than anything, has the power to break through boundaries and transform lives. <br>
+
+        Education underpins all social progress. Our aim is to harness technology to make all education and skills training available to anyone, anywhere for free.We believe that free education, more than anything, has the power to break through boundaries and transform lives.
+      </p>
+
+        <div class="pt-10">
+          <a href="">
+      <button class="bg-black py-2 px-6 text-white hover:bg-white hover:text-black border border-black">Learn More</button>
+      </a>
+    </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Teacher  -->
+
+<section class="xl:px-20 lg:px-10 px-5 xl:py-20 py-10">
+  <div>
+    <h1 class="text-black lg:text-4xl text-2xl font-semibold">
+        Our Expert Teacher
+      </h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:pt-8 pt-5">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     
     <style>
         @keyframes shimmer {

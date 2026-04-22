@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_assignment']))
             $filesize = $file['size'];
             $sql = "INSERT INTO assignments (title, filename, filesize, uploaded_by, course_id) VALUES ('$title', '$filename', $filesize, $teacher_id, $course_id)";
             if ($conn->query($sql)) {
+<<<<<<< HEAD
                 $message = "Assignment '$title' successfully uploaded.";
         } else {
             $error = "Database error: " . $conn->error;
@@ -33,6 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_assignment']))
 } else {
     $error = "Missing information: Title and file required.";
 }
+=======
+                $message = "Curriculum asset '$title' successfully deployed to repository.";
+            } else {
+                $error = "Registry error: " . $conn->error;
+            }
+        } else {
+            $error = "IO failure: Check directory permissions.";
+        }
+    } else {
+        $error = "Submission failed: Missing payload or invalid file.";
+    }
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 }
 
 // Fetch data
@@ -49,8 +62,13 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
       <main class="p-6 lg:p-10">
         <div class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-3xl font-black tracking-tight">Assignment Management</h1>
                 <p class="text-slate-500 font-medium">Create and manage your course assignments.</p>
+=======
+                <h1 class="text-3xl font-black tracking-tight">Assignment Lab</h1>
+                <p class="text-slate-500 font-medium">Issue diagnostic tasks and audit student submissions.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
         </div>
 
@@ -72,12 +90,20 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
                 <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                 </div>
+<<<<<<< HEAD
                 <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Create Assignment</h2>
+=======
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Design Task</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
 
             <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-end">
                 <div class="lg:col-span-1">
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Subject</label>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Target Module</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                         <option value="">Choose Course...</option>
                         <?php while($c = $courses_result->fetch_assoc()): ?>
@@ -86,23 +112,39 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
                     </select>
                 </div>
                 <div class="lg:col-span-1">
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assignment Title</label>
                     <input type="text" name="title" placeholder="e.g. Unit 4 Research Paper" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                 </div>
                 <div class="lg:col-span-1">
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Select File</label>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Instructional Title</label>
+                    <input type="text" name="title" placeholder="e.g. Unit 4 Research Paper" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Source Documentation</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <input type="file" name="assignment_file" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
                 </div>
                 <div>
                     <button type="submit" name="upload_assignment" class="w-full bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] py-4 rounded-2xl hover:bg-blue-600 transition shadow-xl shadow-slate-100">
+<<<<<<< HEAD
                         Upload
+=======
+                        Deploy Task
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </button>
                 </div>
             </form>
         </div>
 
         <!-- Inventory List -->
+<<<<<<< HEAD
         <h3 class="text-xl font-black text-slate-900 tracking-tight mb-8 px-4">All Assignments</h3>
+=======
+        <h3 class="text-xl font-black text-slate-900 tracking-tight mb-8 px-4">Active Registry</h3>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         <div class="space-y-6">
             <?php if ($assignments && $assignments->num_rows > 0): ?>
                 <?php while ($assignment = $assignments->fetch_assoc()): ?>
@@ -127,7 +169,11 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
                                     <i class="fa-solid fa-download"></i> Source
                                 </a>
                                 <button onclick="document.getElementById('subs-<?= $assignment['id'] ?>').classList.toggle('hidden')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition shadow-lg shadow-blue-100">
+<<<<<<< HEAD
                                     View Submissions
+=======
+                                    Audit Submissions
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 </button>
                             </div>
                         </div>
@@ -140,12 +186,21 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
                             ?>
                             <?php if ($subs && $subs->num_rows > 0): ?>
                                 <div class="overflow-x-auto">
+<<<<<<< HEAD
                                     <table class="min-w-max w-full text-left text-xs">
                                         <thead class="bg-slate-50 rounded-xl overflow-hidden text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                             <tr>
                                                 <th class="px-6 py-4">Student Name</th>
                                                 <th class="px-6 py-4">Submitted At</th>
                                                 <th class="px-6 py-4">File Name</th>
+=======
+                                    <table class="w-full text-left text-xs">
+                                        <thead class="bg-slate-50 rounded-xl overflow-hidden text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            <tr>
+                                                <th class="px-6 py-4">Student Participant</th>
+                                                <th class="px-6 py-4">Submitted At</th>
+                                                <th class="px-6 py-4">File ID</th>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                                 <th class="px-6 py-4 text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -169,7 +224,11 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
                                     </table>
                                 </div>
                             <?php else: ?>
+<<<<<<< HEAD
                                 <p class="text-center py-6 text-slate-400 font-bold italic">No submissions for this assignment yet.</p>
+=======
+                                <p class="text-center py-6 text-slate-400 font-bold italic">Zero submissions detected for this task.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <?php endif; ?>
                         </div>
                     </div>
@@ -177,7 +236,11 @@ $assignments = $conn->query("SELECT a.*, c.title as course_title FROM assignment
             <?php else: ?>
                 <div class="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
                     <i class="fa-solid fa-folder-open text-4xl text-slate-100 mb-4"></i>
+<<<<<<< HEAD
                     <p class="text-slate-400 font-black uppercase tracking-widest text-[10px]">No assignments found</p>
+=======
+                    <p class="text-slate-400 font-black uppercase tracking-widest text-[10px]">Registry is Vacuumed</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                 </div>
             <?php endif; ?>
         </div>

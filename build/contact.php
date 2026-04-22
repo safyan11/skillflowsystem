@@ -4,11 +4,59 @@
 
 <body class="relative min-h-screen bg-slate-950 font-sans text-slate-300 selection:bg-blue-500/30">
 
+<<<<<<< HEAD
     <!-- Immersive Animated Background -->
     <div class="fixed inset-0 z-0 pointer-events-none">
         <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse" style="animation-duration: 8s;"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[120px]" style="animation-duration: 10s; animation-direction: reverse;"></div>
         <img src="./assets/img/modern-bg.jpg" class="w-full h-full object-cover opacity-10" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80';">
+=======
+
+
+<!-- 
+<section class="h-96 bg-fixed bg-center bg-no-repeat bg-cover" style="background-image: url('./assets/img/about.png');">
+  <div class="h-96 flex items-center justify-center bg-black bg-opacity-50">
+    <h1 class="md:text-4xl xt-2xl font-bold text-white">About us</h1>
+  </div>
+</section> -->
+
+<section class="lg:py-20 py-10 xl:px-20 lg:px-10 px-5">
+
+    <div class="flex lg:flex-row flex-col items-center">
+            
+        <div class="space-y-4 lg:w-1/2 w-full">
+            <h1 class="text-4xl font-semibold">Contact</h1> 
+            <p class="text-black text-lg "><i class="fa-solid fa-location-dot"></i>&nbsp; Lahore, Pakistan</p>
+            <p class="text-black text-lg "><i class="fa-solid fa-envelope"></i>&nbsp; TeachMate@gmail.com</p>
+            <p class="text-black text-lg "><i class="fa-solid fa-phone"></i>&nbsp; 0562929978</p>
+            <p class="text-black text-lg "><i class="fa-solid fa-clock"></i>&nbsp; Mon - Fri 8:00 AM to 5:00 PM</p>
+        </div>
+
+        <div class="lg:w-1/2 w-full">
+             <form action="form.php" method="POST" class="space-y-4">
+      <div>
+        <input type="text" name="name" placeholder="Your Name" required 
+               class="w-full px-4 py-4 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+      </div>
+      <div>
+        <input type="email" name="email" placeholder="Your Email" required 
+               class="w-full px-4 py-4 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+      </div>
+      <div>
+        <input type="text" name="subject" placeholder="Subject" required 
+               class="w-full px-4 py-4 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+      </div>
+      <div>
+        <textarea name="message" rows="5" placeholder="Your Message" required 
+                  class="w-full px-4 py-4 border border-black rounded-md focus:outline-none focus:ring-1 focus:ring-black"></textarea>
+      </div>
+      <button type="submit" 
+              class="w-full bg-black hover:bg-white border border-black text-white py-3 rounded-sm hover:text-black transition duration-300">
+        Send Message
+      </button>
+    </form>
+        </div>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     </div>
     <div class="fixed inset-0 z-0 backdrop-blur-[2px] bg-slate-950/70"></div>
 

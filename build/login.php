@@ -53,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
+<<<<<<< HEAD
 <!-- Inject Tailwind CSS manually here because inc/header.php doesn't have it -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -91,10 +92,31 @@ $conn->close();
         .input-glow:focus-within {
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
             border-color: rgba(59, 130, 246, 0.5);
+=======
+<body class="bg-black relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Immersive Background -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/40 rounded-full mix-blend-screen filter blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/40 rounded-full mix-blend-screen filter blur-[100px]"></div>
+        <img src="./assets/img/modern-bg.jpg" class="w-full h-full object-cover opacity-30" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80';">
+    </div>
+
+    <!-- Blur Overlay -->
+    <div class="absolute inset-0 z-0 backdrop-blur-xl bg-black/20"></div>
+
+    <style>
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-modal {
+            animation: modalPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         }
     </style>
 
     <section class="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-12 flex justify-center items-center">
+<<<<<<< HEAD
         <!-- Glassmorphism Login Card -->
         <div class="w-full max-w-lg rounded-3xl shadow-2xl border border-white/10 bg-slate-900/60 backdrop-blur-2xl animate-card p-8 sm:p-12 opacity-0">
             
@@ -109,11 +131,28 @@ $conn->close();
                 <?php if (!empty($loginError)): ?>
                     <div class="bg-red-500/10 border border-red-500/40 text-red-400 p-4 rounded-xl text-sm font-bold flex items-center gap-3 mb-6 animate-pulse">
                         <i class="fa-solid fa-circle-exclamation text-lg"></i>
+=======
+        <!-- Centered Glass Modal -->
+        <div class="glass-card w-full max-w-lg rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden border border-white/20 bg-black/40 backdrop-blur-[40px] animate-modal p-8 sm:p-12">
+            
+            <form action="" method="POST">
+                <!-- Logo Header -->
+                <div class="text-center mb-10 flex flex-col items-center">
+                    <img src="./assets/img/teachmate_logo.png" alt="TeachMate" class="h-16 w-16 mb-4 rounded-xl shadow-lg border border-white/10">
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h2>
+                    <p class="text-sm font-medium text-gray-300 mt-2">Don't have an account? <a href="signup.php" class="text-emerald-400 font-bold hover:text-emerald-300 transition underline-offset-2 hover:underline">Create one</a></p>
+                </div>
+                
+                <?php if (!empty($loginError)): ?>
+                    <div class="bg-red-500/20 border border-red-500/50 text-red-100 p-4 rounded-xl text-sm font-bold flex items-center gap-3 backdrop-blur-md mb-6 shadow-inner">
+                        <i class="fa-solid fa-circle-exclamation text-lg text-red-400"></i>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <?= $loginError ?>
                     </div>
                 <?php endif; ?>
                 
                 <div class="space-y-6">
+<<<<<<< HEAD
                     <!-- Email Field -->
                     <div class="input-glow rounded-xl border border-white/10 bg-slate-800/50 transition-all duration-300 relative group overflow-hidden">
                         <label class="block mb-1 text-sm font-bold text-slate-300 px-4 pt-3">Email Address</label>
@@ -178,9 +217,47 @@ $conn->close();
                             100% { transform: translateX(100%); }
                         }
                     </style>
+=======
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-200">Email Address</label>
+                        <input name="email" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none placeholder-gray-400 backdrop-blur-md shadow-inner" placeholder="user@example.com" type="email" required>
+                    </div>
+                    
+                    <div x-data="{ show: false }">
+                        <label class="block mb-2 text-sm font-bold text-gray-200">Password</label>
+                        <div class="relative">
+                            <input name="password" :type="show ? 'text' : 'password'" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none placeholder-gray-400 pr-12 backdrop-blur-md shadow-inner" placeholder="••••••••" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center px-5 text-gray-300 hover:text-white transition-colors">
+                                <i :class="show ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-200">User Role</label>
+                        <select name="role" class="w-full px-5 py-4 rounded-xl border border-white/10 bg-white/10 text-white focus:bg-white/20 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-all outline-none cursor-pointer backdrop-blur-md shadow-inner [&>option]:bg-gray-900" required>
+                            <option value="">Select your role</option>
+                            <option value="admin">Admin</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <a href="auth/forgot_password.php" class="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition underline-offset-2 hover:underline drop-shadow-md">Forgot Password?</a>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-bold text-lg shadow-[0_0_20px_rgba(52,211,153,0.3)] hover:shadow-[0_0_30px_rgba(52,211,153,0.5)] hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2">
+                            <span>Sign In</span>
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                    </div>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                 </div>
             </form>
         </div>
+    </div>
     </section>
     
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js" defer></script>

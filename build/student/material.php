@@ -21,20 +21,30 @@ if ($result) {
 <body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
   <div class="min-h-screen flex">
     <?php require_once "inc/sidebar.php"; ?>
+<<<<<<< HEAD
     <div class="flex-1 flex flex-col ml-0 md:ml-72 transition-all duration-300">
+=======
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
       <?php require_once "inc/topbar.php"; ?>
 
       <main class="p-6 lg:p-10">
         <div class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-3xl font-black tracking-tight italic">Course Materials</h1>
                 <p class="text-slate-500 font-medium italic uppercase tracking-wider text-[11px]">Download study files and resources</p>
+=======
+                <h1 class="text-3xl font-black tracking-tight italic">Asset Repository</h1>
+                <p class="text-slate-500 font-medium italic uppercase tracking-wider text-[11px]">Synchronized Curriculum Inventory</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
             <div class="px-5 py-2 bg-white rounded-2xl border border-slate-100 shadow-sm text-[10px] font-black uppercase tracking-widest text-slate-400 italic">
                 Total Resources: <?= count($materials) ?>
             </div>
         </div>
 
+<<<<<<< HEAD
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100">
             <div class="overflow-x-auto">
                 <table class="min-w-max w-full text-left text-sm">
@@ -45,6 +55,19 @@ if ($result) {
                             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-center">File Size</th>
                             <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-center">Date Uploaded</th>
                             <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-right">Actions</th>
+=======
+        <!-- Material Table Diagnostic -->
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Resource Identifier</th>
+                            <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Course Context</th>
+                            <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-center">Protocol Size</th>
+                            <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-center">Sync Date</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic text-right">Action</th>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50 text-slate-800">
@@ -85,7 +108,11 @@ if ($result) {
                         <?php else: ?>
                             <tr>
                                 <td colspan="5" class="py-20 text-center italic text-slate-300 font-bold uppercase tracking-widest">
+<<<<<<< HEAD
                                     No materials available at the moment.
+=======
+                                    Asset repository is currently offline or vacant.
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -100,8 +127,13 @@ if ($result) {
                 <i class="fa-solid fa-graduation-cap text-9xl"></i>
             </div>
             <div class="relative z-10 max-w-2xl">
+<<<<<<< HEAD
                 <h4 class="text-2xl font-black mb-4 italic leading-tight">Start Learning Today.</h4>
                 <p class="text-sm font-bold text-blue-100 italic">Download your files and start studying. Consistent learning leads to success.</p>
+=======
+                <h4 class="text-2xl font-black mb-4 italic leading-tight">Precision Execution Required.</h4>
+                <p class="text-sm font-bold text-blue-100 italic">Download your curriculum assets and begin localized synchronization. Expert-level knowledge is achieved through repeated instructional execution.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
         </div>
       </main>

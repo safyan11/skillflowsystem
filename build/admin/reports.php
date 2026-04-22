@@ -22,6 +22,11 @@ $total_courses = $courses_q->fetch_assoc()['count'];
 $materials_q = $conn->query("SELECT COUNT(*) as count FROM materials");
 $total_materials = $materials_q->fetch_assoc()['count'];
 
+<<<<<<< HEAD
+=======
+$quizzes_q = $conn->query("SELECT COUNT(*) as count FROM quizzes");
+$total_quizzes = $quizzes_q->fetch_assoc()['count'];
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 
 $submissions_q = $conn->query("SELECT COUNT(*) as count FROM submissions");
 $total_submissions = $submissions_q->fetch_assoc()['count'];
@@ -53,6 +58,13 @@ $total_submissions = $submissions_q->fetch_assoc()['count'];
             <h3 class="text-xl font-bold text-yellow-800">Total Courses</h3>
             <p class="text-4xl font-bold mt-2 text-yellow-900"><?= $total_courses ?></p>
         </div>
+<<<<<<< HEAD
+=======
+        <div class="bg-pink-100 p-6 rounded-lg text-center shadow">
+            <h3 class="text-xl font-bold text-pink-800">Quizzes Created</h3>
+            <p class="text-4xl font-bold mt-2 text-pink-900"><?= $total_quizzes ?></p>
+        </div>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         <div class="bg-indigo-100 p-6 rounded-lg text-center shadow">
             <h3 class="text-xl font-bold text-indigo-800">Assignments Submitted</h3>
             <p class="text-4xl font-bold mt-2 text-indigo-900"><?= $total_submissions ?></p>

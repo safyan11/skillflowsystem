@@ -55,7 +55,11 @@ $result = $conn->query("SELECT c.*, u.name AS std_name, u.email as std_email
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform Sync Active</span>
             </div>
             <div class="overflow-x-auto">
+<<<<<<< HEAD
                 <table class="min-w-max w-full text-left">
+=======
+                <table class="w-full text-left">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr>
                             <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Reporter</th>

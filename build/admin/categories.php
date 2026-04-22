@@ -66,7 +66,11 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY created_at DESC");
         <div>
             <h3 class="text-xl font-bold mb-4">Existing Categories</h3>
             <div class="overflow-x-auto">
+<<<<<<< HEAD
                 <table class="min-w-max w-full table-auto border-collapse border border-gray-300">
+=======
+                <table class="w-full table-auto border-collapse border border-gray-300">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <thead>
                         <tr class="bg-gray-200">
                             <th class="border border-gray-300 p-2 text-left">Name</th>

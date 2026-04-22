@@ -20,14 +20,23 @@ $classes_result = $stmt->get_result();
 <body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
   <div class="min-h-screen flex">
     <?php require_once "inc/sidebar.php"; ?>
+<<<<<<< HEAD
     <div class="flex-1 flex flex-col ml-0 md:ml-72 transition-all duration-300">
+=======
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
       <?php require_once "inc/topbar.php"; ?>
 
       <main class="p-6 lg:p-10">
         <div class="mb-12 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-4xl font-black tracking-tight italic">Online Classes</h1>
                 <p class="text-slate-500 font-medium italic mt-2 uppercase tracking-widest text-xs">Join your live sessions here</p>
+=======
+                <h1 class="text-4xl font-black tracking-tight italic">Broadcast Terminal</h1>
+                <p class="text-slate-500 font-medium italic mt-2 uppercase tracking-widest text-xs">Synchronous Learning Orchestration</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
             <div class="flex items-center gap-3">
                 <div class="px-5 py-2 bg-white rounded-2xl border border-slate-100 shadow-sm text-[10px] font-black uppercase tracking-widest text-emerald-600 italic">
@@ -48,7 +57,11 @@ $classes_result = $stmt->get_result();
                             Session Monitoring Active
                         </div>
                         <h2 class="text-4xl lg:text-5xl font-black italic leading-tight mb-6">Synchronized <br><span class="text-blue-500 text-5xl lg:text-6xl">Knowledge Transfer.</span></h2>
+<<<<<<< HEAD
                         <p class="text-slate-400 font-medium text-lg leading-relaxed italic">Join live classes and interact with your teachers in real-time.</p>
+=======
+                        <p class="text-slate-400 font-medium text-lg leading-relaxed italic">Direct frequency established with faculty architects. Ensure your localized hardware is optimized for real-time data reception.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </div>
                     <div class="hidden lg:flex justify-end">
                         <div class="w-64 h-64 border border-white/10 rounded-[4rem] flex items-center justify-center p-8 bg-white/5 backdrop-blur-sm relative group-hover:border-blue-500/50 transition duration-700">
@@ -65,7 +78,11 @@ $classes_result = $stmt->get_result();
         <!-- Upcoming Sessions -->
         <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8 flex items-center gap-3 italic">
             <span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
+<<<<<<< HEAD
             Class Schedule
+=======
+            Temporal Schedule
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
@@ -78,7 +95,11 @@ $classes_result = $stmt->get_result();
                                     <i class="fa-solid fa-calendar-day"></i>
                                 </div>
                                 <span class="px-3 py-1 bg-white border border-slate-100 rounded-lg text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-blue-600 transition italic">
+<<<<<<< HEAD
                                     Upcoming
+=======
+                                    Planned
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 </span>
                             </div>
 
@@ -96,7 +117,11 @@ $classes_result = $stmt->get_result();
 
                             <a href="<?= htmlspecialchars($row['meet_link']) ?>" target="_blank" 
                                class="block w-full text-center bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] py-4 rounded-[1.5rem] hover:bg-blue-600 transition-all duration-500 shadow-xl shadow-slate-100 group">
+<<<<<<< HEAD
                                  Join Class <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition duration-300"></i>
+=======
+                                Initialize Uplink <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition duration-300"></i>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             </a>
                         </div>
                     </div>
@@ -104,8 +129,13 @@ $classes_result = $stmt->get_result();
             <?php else: ?>
                 <div class="col-span-full py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-100 shadow-inner">
                     <i class="fa-solid fa-satellite-dish text-slate-200 text-6xl mb-6"></i>
+<<<<<<< HEAD
                     <h3 class="text-xl font-black text-slate-400 italic">No online classes scheduled at the moment.</h3>
                     <p class="text-[10px] font-bold text-slate-300 uppercase mt-2 tracking-widest">Keep checking for updates</p>
+=======
+                    <h3 class="text-xl font-black text-slate-400 italic">No Synchronous Transmissions Scheduled.</h3>
+                    <p class="text-[10px] font-bold text-slate-300 uppercase mt-2 tracking-widest">Awaiting Command from Architecture</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                 </div>
             <?php endif; ?>
         </div>

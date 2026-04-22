@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issue_certificate']))
             $stmt = $conn->prepare("INSERT INTO certificates (student_id, course_id, file_path) VALUES (?, ?, ?)");
             $stmt->bind_param("iis", $student_id, $course_id, $targetPath);
             if ($stmt->execute()) {
+<<<<<<< HEAD
                 $message = "Certificate successfully uploaded.";
             } else {
                 $error = "Database error: " . $conn->error;
@@ -33,6 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['issue_certificate']))
         }
     } else {
         $error = "Please select a valid file.";
+=======
+                $message = "Graduation certificate successfully pushed to student cabinet.";
+            } else {
+                $error = "Registry error: " . $conn->error;
+            }
+            $stmt->close();
+        } else {
+            $error = "IO failure: Check directory permissions.";
+        }
+    } else {
+        $error = "No valid payload detected in request.";
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
 }
 
@@ -49,7 +62,11 @@ if (isset($_GET['delete_id'])) {
 }
 
 if (isset($_GET['msg']) && $_GET['msg'] == 'deleted') {
+<<<<<<< HEAD
     $message = "Certificate deleted successfully.";
+=======
+    $message = "Certificate purged from permanent records.";
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 }
 
 // Data Fetching
@@ -70,8 +87,13 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
 
       <main class="p-6 lg:p-10">
         <div class="mb-10">
+<<<<<<< HEAD
             <h1 class="text-3xl font-black tracking-tight">Course Certificates</h1>
             <p class="text-slate-500 font-medium">Upload and manage course completion certificates for students.</p>
+=======
+            <h1 class="text-3xl font-black tracking-tight">Certification Center</h1>
+            <p class="text-slate-500 font-medium">Validate and issue official academic credentials.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         </div>
 
         <?php if ($message): ?>
@@ -92,12 +114,20 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
                 <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
                     <i class="fa-solid fa-stamp"></i>
                 </div>
+<<<<<<< HEAD
                 <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Issue New Certificate</h2>
+=======
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Issue Security Credentials</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
 
             <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-end">
                 <div>
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Select Student</label>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Student Identity</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <select name="student_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                         <option value="">Choose Student...</option>
                         <?php while($s = $students->fetch_assoc()): ?>
@@ -106,20 +136,34 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
                     </select>
                 </div>
                 <div>
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Select Course</label>
                     <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                         <option value="">Choose Course...</option>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assigned Module</label>
+                    <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                        <option value="">Identify Course...</option>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <?php while($c = $courses->fetch_assoc()): ?>
                             <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['title']) ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
                 <div>
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Certificate File (PDF/IMG)</label>
                     <div class="flex items-center gap-3">
                         <input type="file" name="certificate" required class="flex-1 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-slate-900 file:text-white hover:file:bg-blue-600 transition">
                         <button type="submit" name="issue_certificate" class="bg-blue-600 text-white px-6 h-10 rounded-2xl hover:bg-black transition flex items-center justify-center shadow-lg shadow-blue-100 font-black text-[10px] uppercase tracking-widest">
                             Upload
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Credential File (PDF/IMG/DOC)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="file" name="certificate" required class="flex-1 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-slate-900 file:text-white hover:file:bg-blue-600 transition">
+                        <button type="submit" name="issue_certificate" class="bg-blue-600 text-white w-12 h-10 rounded-2xl hover:bg-black transition flex items-center justify-center shadow-lg shadow-blue-100">
+                            <i class="fa-solid fa-paper-plane"></i>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         </button>
                     </div>
                 </div>
@@ -129,6 +173,7 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
         <!-- Issuance History -->
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden text-sm">
             <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+<<<<<<< HEAD
                 <h3 class="font-black text-slate-900 uppercase tracking-widest text-xs">Issued Certificates</h3>
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Certificate History</span>
             </div>
@@ -138,6 +183,17 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
                         <tr>
                             <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Recipient</th>
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Course Title</th>
+=======
+                <h3 class="font-black text-slate-900 uppercase tracking-widest text-xs">Registry History</h3>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Credentials</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Recipient</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Qualified Module</th>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Issued On</th>
                             <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Actions</th>
                         </tr>
@@ -174,6 +230,13 @@ $history = $conn->query("SELECT cert.*, u.name as std_name, u.email as std_email
       </main>
     </div>
   </div>
+<<<<<<< HEAD
+=======
+
+  <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
+</body>
+</html>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>

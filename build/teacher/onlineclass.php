@@ -19,14 +19,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_title'])) {
     $class_time = $_POST['class_time'];
 
     if (empty($class_title) || empty($meet_link) || empty($class_date) || empty($class_time)) {
+<<<<<<< HEAD
         $error = "Error: All fields are required.";
+=======
+        $error = "Provisioning failed: All fields are mandatory.";
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     } else {
         $sql = "INSERT INTO online_classes (teacher_id, course_id, class_title, class_description, meet_link, class_date, class_time)
                 VALUES ($teacher_id, $course_id, '$class_title', '$class_description', '$meet_link', '$class_date', '$class_time')";
         if ($conn->query($sql)) {
+<<<<<<< HEAD
             $message = "Online class '$class_title' successfully created.";
         } else {
             $error = "Error: Could not create class. " . $conn->error;
+=======
+            $message = "Virtual classroom for '$class_title' successfully synchronized.";
+        } else {
+            $error = "Sync failed: " . $conn->error;
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         }
     }
 }
@@ -48,8 +58,13 @@ $classes = $conn->query($sql_fetch);
       <main class="p-6 lg:p-10">
         <div class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-3xl font-black tracking-tight">Online Classes</h1>
                 <p class="text-slate-500 font-medium">Create and manage your live online sessions.</p>
+=======
+                <h1 class="text-3xl font-black tracking-tight">Virtual Synchrony</h1>
+                <p class="text-slate-500 font-medium">Broadcast live instructional sessions to enrolled students.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
             <div class="bg-blue-50 text-blue-600 px-6 py-2 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-blue-100">
                 Auto-Cleanup Active
@@ -74,21 +89,32 @@ $classes = $conn->query($sql_fetch);
                 <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white">
                     <i class="fa-solid fa-video"></i>
                 </div>
+<<<<<<< HEAD
                 <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Schedule Class</h2>
+=======
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Schedule Broadcast</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
 
             <form method="POST" class="space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div>
+<<<<<<< HEAD
                         <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Subject</label>
                         <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             <option value="">Choose Course...</option>
+=======
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Academic Course</label>
+                        <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            <option value="">Identify Curriculum...</option>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <?php while($c = $courses_result->fetch_assoc()): ?>
                                 <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['title']) ?></option>
                             <?php endwhile; ?>
                         </select>
                     </div>
                     <div>
+<<<<<<< HEAD
                         <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Class Title</label>
                         <input type="text" name="class_title" placeholder="e.g. Advanced Q&A Session" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                     </div>
@@ -102,11 +128,30 @@ $classes = $conn->query($sql_fetch);
                     </div>
                     <div>
                         <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Class Time</label>
+=======
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Class Narrative (Title)</label>
+                        <input type="text" name="class_title" placeholder="e.g. Advanced Q&A Session" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Platform Link (Meet/Zoom)</label>
+                        <input type="url" name="meet_link" placeholder="https://meet.google.com/..." required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Transmission Date</label>
+                        <input type="date" name="class_date" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Transmission Time</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <input type="time" name="class_time" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                     </div>
                     <div class="flex items-end">
                         <button type="submit" class="w-full bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] py-4 rounded-2xl hover:bg-blue-600 transition shadow-xl shadow-slate-100">
+<<<<<<< HEAD
                             Create Class
+=======
+                            Authorize & Sync
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         </button>
                     </div>
                 </div>
@@ -152,7 +197,11 @@ $classes = $conn->query($sql_fetch);
             <?php else: ?>
                 <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
                     <i class="fa-solid fa-ghost text-4xl text-slate-100 mb-4"></i>
+<<<<<<< HEAD
                     <p class="text-slate-400 font-black uppercase tracking-widest text-xs">No Scheduled Classes</p>
+=======
+                    <p class="text-slate-400 font-black uppercase tracking-widest text-xs">No Scheduled Broadcasts</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                 </div>
             <?php endif; ?>
         </div>

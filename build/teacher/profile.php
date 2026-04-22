@@ -42,9 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 
     if ($conn->query($sql)) {
+<<<<<<< HEAD
         $message = "Profile updated successfully.";
     } else {
         $error = "Error: Could not update profile. " . $conn->error;
+=======
+        $message = "Instructor identity synchronized. Security and credential layers updated.";
+    } else {
+        $error = "Synchronization failure: " . $conn->error;
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
 }
 
@@ -52,17 +58,29 @@ $user = $conn->query("SELECT * FROM users WHERE id=$user_id")->fetch_assoc();
 $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['profile_image'] : "https://ui-avatars.com/api/?name=" . urlencode($user['name']) . "&background=0D8ABC&color=fff";
 ?>
 
+<<<<<<< HEAD
 <body class="bg-[#f8fafc]" style="font-family:'Outfit',sans-serif;">
   <div class="min-h-screen flex">
     <?php require_once "inc/sidebar.php"; ?>
     <div class="flex-1 flex flex-col md:ml-64">
+=======
+<body class="bg-[#f8fafc] font-sans antialiased text-slate-900">
+  <div class="min-h-screen flex">
+    <?php require_once "inc/sidebar.php"; ?>
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
       <?php require_once "inc/topbar.php"; ?>
 
       <main class="p-6 lg:p-10 max-w-5xl mx-auto w-full">
         <div class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-3xl font-black tracking-tight">Teacher Profile</h1>
                 <p class="text-slate-500 font-medium">Update your personal information and profile image.</p>
+=======
+                <h1 class="text-3xl font-black tracking-tight">Identity Hub</h1>
+                <p class="text-slate-500 font-medium">Manage your professional credentials and platform persona.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
             <div class="px-5 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] italic">
                 Verified Instructor
@@ -106,8 +124,13 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                             <p class="text-xs font-black text-slate-900 uppercase tracking-tighter"><?= strtoupper($user['role']) ?></p>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl text-left border border-slate-100 hover:bg-slate-100 transition">
+<<<<<<< HEAD
                             <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
                             <p class="text-xs font-black text-slate-900 uppercase tracking-tighter">Active Member</p>
+=======
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Account Sync</p>
+                            <p class="text-xs font-black text-slate-900 uppercase tracking-tighter">Active System Link</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         </div>
                     </div>
                 </div>
@@ -120,20 +143,32 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                         <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
                             <i class="fa-solid fa-sliders"></i>
                         </div>
+<<<<<<< HEAD
                         <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Personal Information</h2>
+=======
+                        <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Credential Settings</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </div>
 
                     <div class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
+<<<<<<< HEAD
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Full Name</label>
+=======
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Legal Identity</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 <div class="relative">
                                     <i class="fa-solid fa-user-tag absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
                                     <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600">
                                 </div>
                             </div>
                             <div>
+<<<<<<< HEAD
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Email Address</label>
+=======
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Digital Endpoint</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 <div class="relative">
                                     <i class="fa-solid fa-at absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
                                     <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600">
@@ -147,19 +182,33 @@ $current_img = !empty($user['profile_image']) ? "../uploads/profile/" . $user['p
                                 <h4 class="text-xs font-black uppercase tracking-widest text-slate-900">Security Override</h4>
                             </div>
                             <div>
+<<<<<<< HEAD
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">New Password</label>
                                 <div class="relative">
                                     <i class="fa-solid fa-key absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
                                     <input type="password" name="password" placeholder="Leave blank to keep current" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600">
                                 </div>
                                 <p class="text-[9px] text-slate-400 font-bold mt-2 italic px-2">Password will be updated securely.</p>
+=======
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">New Access Key</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-key absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input type="password" name="password" placeholder="Null for retention" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <p class="text-[9px] text-slate-400 font-bold mt-2 italic px-2">Encryption will be applied upon submission.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             </div>
                         </div>
 
                         <div class="pt-10">
                             <button type="submit" name="update_profile" class="w-full bg-slate-900 text-white px-8 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 transition shadow-2xl shadow-slate-200 flex items-center justify-center gap-4 group">
+<<<<<<< HEAD
                                 Upload
                                 <i class="fa-solid fa-cloud-arrow-up group-hover:translate-y-[-2px] transition duration-500"></i>
+=======
+                                Authorize Synchronization
+                                <i class="fa-solid fa-repeat group-hover:rotate-180 transition duration-500"></i>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             </button>
                         </div>
                     </div>

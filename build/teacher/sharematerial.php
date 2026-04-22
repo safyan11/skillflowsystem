@@ -23,12 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
             $filesize = $file['size'];
             $sql = "INSERT INTO materials (title, filename, filesize, uploaded_by, course_id) VALUES ('$title', '$filename', $filesize, $teacher_id, $course_id)";
             if ($conn->query($sql)) {
+<<<<<<< HEAD
                 $message = "File '$title' successfully uploaded to the library.";
         } else {
             $error = "Upload error: " . $conn->error;
         }
     } else {
         $error = "Upload failure: Check folder permissions.";
+=======
+                $message = "Instructional asset '$title' successfully archived in repository.";
+            } else {
+                $error = "Registry error: " . $conn->error;
+            }
+        } else {
+            $error = "Transmission failure: Check volume permissions.";
+        }
+    } else {
+        $error = "Invalid payload: Title and documentation required.";
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
 } else {
     $error = "Missing information: Title and file required.";
@@ -49,8 +61,13 @@ $materials_res = $conn->query("SELECT m.*, c.title as course_title FROM material
       <main class="p-6 lg:p-10">
         <div class="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-3xl font-black tracking-tight">Materials Library</h1>
                 <p class="text-slate-500 font-medium">Share study materials and resources with your students.</p>
+=======
+                <h1 class="text-3xl font-black tracking-tight">Asset Repository</h1>
+                <p class="text-slate-500 font-medium">Distribute supplementary materials and academic resources.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
         </div>
 
@@ -72,30 +89,52 @@ $materials_res = $conn->query("SELECT m.*, c.title as course_title FROM material
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
                     <i class="fa-solid fa-share-nodes"></i>
                 </div>
+<<<<<<< HEAD
                 <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Upload Material</h2>
+=======
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Provision Asset</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
 
             <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-end">
                 <div class="lg:col-span-1">
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Select Course</label>
                     <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-indigo-600 font-bold">
                         <option value="">Choose Course...</option>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Subject Module</label>
+                    <select name="course_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-indigo-600 font-bold">
+                        <option value="">Identify Curriculum...</option>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                         <?php while($c = $courses_result->fetch_assoc()): ?>
                             <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['title']) ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
                 <div class="lg:col-span-1">
+<<<<<<< HEAD
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">File Title</label>
                     <input type="text" name="title" placeholder="e.g. Lecture Notes - Module 2" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-indigo-600">
                 </div>
                 <div class="lg:col-span-1">
                     <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Select File</label>
+=======
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Resource Descriptor (Title)</label>
+                    <input type="text" name="title" placeholder="e.g. Lecture Notes - Module 2" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-indigo-600">
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Documentation Source</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     <input type="file" name="material_file" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
                 </div>
                 <div>
                     <button type="submit" class="w-full bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] py-4 rounded-2xl hover:bg-indigo-600 transition shadow-xl shadow-slate-100 italic">
+<<<<<<< HEAD
                         Upload
+=======
+                        Authorize Upload
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </button>
                 </div>
             </form>
@@ -135,7 +174,11 @@ $materials_res = $conn->query("SELECT m.*, c.title as course_title FROM material
             <?php else: ?>
                 <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
                     <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-100 mb-4"></i>
+<<<<<<< HEAD
                     <p class="text-slate-400 font-black uppercase tracking-widest text-[10px]">No materials found</p>
+=======
+                    <p class="text-slate-400 font-black uppercase tracking-widest text-[10px]">Vault is Vacuumed</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                 </div>
             <?php endif; ?>
         </div>

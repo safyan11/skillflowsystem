@@ -16,9 +16,15 @@ if (isset($_GET['delete_id'])) {
         }
     }
     if ($conn->query("DELETE FROM courses WHERE id=$del_id")) {
+<<<<<<< HEAD
         $message = "Course deleted successfully.";
     } else {
         $error = "Error: Could not delete course. " . $conn->error;
+=======
+        $message = "Course purged from system.";
+    } else {
+        $error = "Purge failed: " . $conn->error;
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
 }
 
@@ -54,9 +60,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_course'])) {
     $stmt->bind_param("sssiiisssssssi", $title, $short_description, $video_hours, $articles, $resources, $assignments, $certificate, $full_description, $instructor_name, $instructor_designation, $overview, $what_you_will_learn, $thumb_url, $category_id);
     
     if ($stmt->execute()) {
+<<<<<<< HEAD
         $message = "Course '$title' successfully created.";
     } else {
         $error = "Error: Could not create course. " . $stmt->error;
+=======
+        $message = "Course '$title' successfully listed on platform.";
+    } else {
+        $error = "Enrollment failed: " . $stmt->error;
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
     }
     $stmt->close();
 }
@@ -73,8 +85,13 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
 
       <main class="p-6 lg:p-10">
         <div class="mb-10">
+<<<<<<< HEAD
             <h1 class="text-3xl font-black tracking-tight">Course Management</h1>
             <p class="text-slate-500 font-medium">Create and manage academic courses on the platform.</p>
+=======
+            <h1 class="text-3xl font-black tracking-tight">Curriculum Management</h1>
+            <p class="text-slate-500 font-medium">Design and deploy high-impact learning experiences.</p>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
         </div>
 
         <?php if ($message): ?>
@@ -89,7 +106,11 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
                 <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
                     <i class="fa-solid fa-plus"></i>
                 </div>
+<<<<<<< HEAD
                 <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Add New Course</h2>
+=======
+                <h2 class="text-xl font-black uppercase tracking-widest text-slate-900 text-sm">Draft New Course</h2>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
             </div>
 
             <form method="POST" enctype="multipart/form-data" class="space-y-8">
@@ -97,29 +118,51 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
                     <!-- Left Col -->
                     <div class="space-y-6">
                         <div>
+<<<<<<< HEAD
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Category</label>
                             <select name="category_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                                 <option value="">Select Category...</option>
+=======
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Category Authority</label>
+                            <select name="category_id" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                                <option value="">Identify Department...</option>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 <?php while($cat = $categories->fetch_assoc()): ?>
                                     <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
                                 <?php endwhile; ?>
                             </select>
                         </div>
                         <div>
+<<<<<<< HEAD
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Course Title</label>
                             <input type="text" name="title" required placeholder="e.g. Advanced Neural Architectures" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                         </div>
                         <div>
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Short Description</label>
+=======
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Academic Title</label>
+                            <input type="text" name="title" required placeholder="e.g. Advanced Neural Architectures" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Executive Summary</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <textarea name="short_description" rows="3" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600"></textarea>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
+<<<<<<< HEAD
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Total Hours</label>
                                 <input type="text" name="video_hours" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             </div>
                             <div>
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Certificate</label>
+=======
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Runtime (Hrs)</label>
+                                <input type="text" name="video_hours" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Cert Option</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 <select name="certificate" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                                     <option value="Yes">Enabled</option>
                                     <option value="No">Disabled</option>
@@ -136,27 +179,47 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
                                 <input type="number" name="articles" value="5" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             </div>
                             <div>
+<<<<<<< HEAD
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Materials</label>
                                 <input type="number" name="resources" value="10" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             </div>
                             <div>
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assignments</label>
+=======
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assets</label>
+                                <input type="number" name="resources" value="10" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Assigned</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                                 <input type="number" name="assignments" value="2" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             </div>
                         </div>
                         <div>
+<<<<<<< HEAD
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Instructor Information</label>
+=======
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Instructor Identity</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <div class="grid grid-cols-2 gap-4">
                                 <input type="text" name="instructor_name" placeholder="Full Name" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                                 <input type="text" name="instructor_designation" placeholder="Designation" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600">
                             </div>
                         </div>
                         <div>
+<<<<<<< HEAD
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Course Image</label>
                             <input type="file" name="thumbnail" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </div>
                         <div>
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Learning Objectives (Line separated)</label>
+=======
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Visual ID (Thumbnail)</label>
+                            <input type="file" name="thumbnail" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Syllabus Highlights (Line separated)</label>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <textarea name="what_you_will_learn" rows="3" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-blue-600"></textarea>
                         </div>
                     </div>
@@ -164,7 +227,11 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
 
                 <div class="pt-6 border-t border-slate-50 flex justify-end">
                     <button type="submit" name="add_course" class="bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] px-10 py-4 rounded-2xl hover:bg-blue-600 transition shadow-xl shadow-slate-100">
+<<<<<<< HEAD
                         Upload
+=======
+                        Launch Course to Registry
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                     </button>
                 </div>
             </form>
@@ -173,6 +240,7 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
         <!-- Course Inventory -->
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden text-sm">
             <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+<<<<<<< HEAD
                 <h3 class="font-black text-slate-900 uppercase tracking-widest text-xs">All Courses</h3>
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active List</span>
             </div>
@@ -183,6 +251,18 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
                             <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Course Title</th>
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Instructor</th>
+=======
+                <h3 class="font-black text-slate-900 uppercase tracking-widest text-xs">Platform Registry</h3>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Inventory</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Module</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Faculty</th>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Duration</th>
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Cert</th>
                             <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Actions</th>
@@ -227,6 +307,13 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
       </main>
     </div>
   </div>
+<<<<<<< HEAD
+=======
+
+  <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
+</body>
+</html>
+>>>>>>> b9fc0b0caa5737cb92934e15d7778649bf2a89a9
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
 </body>
